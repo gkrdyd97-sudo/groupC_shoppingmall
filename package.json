@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "prebuild": "npm run test",
-    "start": "next start",
-    "lint": "eslint .",
-    "test": "node --import tsx --test shared/utils/*.test.ts",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+  "dev": "next dev",
+  "build": "next build",
+  "prebuild": "npm run test",
+  "start": "next start",
+  "lint": "next lint",
+  "test": "node --import tsx --test '{app,domains,shared}/**/*.test.ts'",
+  "format": "prettier --write .",
+  "format:check": "prettier --check ."
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
