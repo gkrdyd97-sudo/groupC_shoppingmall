@@ -34,7 +34,7 @@ export default function CartItem({
                     +
                 </Button>
 
-                <FaTrashAlt onClick={() => onRemoveItem(id)} />
+                <FaTrashAlt onClick={() => onRemoveItem(id)} />   
             </div>
         </div>
     );
