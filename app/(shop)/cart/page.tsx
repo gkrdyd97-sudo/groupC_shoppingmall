@@ -43,7 +43,7 @@ export default function CartPage() {
         setItems(items.filter((item) => item.id !== id));
     };
 
-    return (
+    return ( 
         <>
             <h1>장바구니</h1>
             {items.length === 0 ? (
