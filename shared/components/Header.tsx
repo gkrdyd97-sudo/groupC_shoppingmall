@@ -17,7 +17,7 @@ export default function Header() {
                     href="/"
                     className="text-lg font-black tracking-tight text-gray-900 transition-colors hover:text-blue-600 md:text-xl"
                 >
-                    Team Sparta
+                    RNDO 
                 </Link>
 
                 {/* 네비게이션 영역 */}
