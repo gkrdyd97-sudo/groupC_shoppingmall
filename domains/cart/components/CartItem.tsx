@@ -23,6 +23,9 @@ export default function CartItem({
             <div>{productName}</div>
             <div>{price * quantity}</div>
             <div className="flex">
+                <Button type="button" onClick={() => onChangeItem(id, 'minus')}>
+                    -
+                </Button>
                 <Input type="number" value={quantity} readOnly />
                 <Button type="button" onClick={() => onChangeItem(id, 'minus')}>
                     -
@@ -31,7 +34,7 @@ export default function CartItem({
                     +
                 </Button>
 
-                <FaTrashAlt onClick={() => onRemoveItem(id)} />
+                <FaTrashAlt onClick={() => onRemoveItem(id)} />   
             </div>
         </div>
     );

@@ -38,6 +38,11 @@ export default function CartPage() {
             ),
         );
     };
+    const onDelete = (id: number) => {
+        setItems(
+            items.filter((item) => item.id !== id )
+        )
+    }
 
     const onRemoveItem = (id: number) => {
         setItems(items.filter((item) => item.id !== id));

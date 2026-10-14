@@ -17,31 +17,12 @@ export default function Header() {
                     href="/"
                     className="text-lg font-black tracking-tight text-gray-900 transition-colors hover:text-blue-600 md:text-xl"
                 >
-                    RNDO 
+                    RNDO
                 </Link>
 
                 {/* 네비게이션 영역 */}
-                <nav className="flex items-center gap-1 md:gap-3">
+                <nav aria-label="사용자메뉴" className="flex items-center gap-1 md:gap-3">
                     {/* 전체 상품 링크: 2일차에 카테고리 GNB로 확장 */}
-                    <Link
-                        href="/products"
-                        aria-label="전체 상품"
-                        className="flex h-10 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-blue-600 md:px-3 md:text-sm"
-                    >
-                        <FiGrid className="h-4 w-4 shrink-0" />
-                        <span className="hidden md:inline">전체 상품</span>
-                    </Link>
-
-                    {/* 장바구니 링크 */}
-                    <Link
-                        href="/cart"
-                        aria-label="장바구니"
-                        className="flex h-10 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-blue-600 md:px-3 md:text-sm"
-                    >
-                        <FiShoppingBag className="h-4 w-4 shrink-0" />
-                        <span className="hidden md:inline">장바구니</span>
-                    </Link>
-
                     {/* 로그인 버튼 */}
                     <Button
                         variant="outline"
@@ -56,7 +37,38 @@ export default function Header() {
                             <span className="text-xs md:text-sm">로그인</span>
                         </Link>
                     </Button>
+                    {/* 로그인 버튼 */}
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 px-2.5 md:px-3"
+                    >
+                        <Link
+                            href="/login"
+                            className="flex items-center gap-1.5"
+                        >
+                            <FiUser className="h-3.5 w-3.5" />
+                            <span className="text-xs md:text-sm">회원가입</span>
+                        </Link>
+                    </Button>
+
+                    {/* 장바구니 링크 */}
+                    <Link
+                        href="/cart"
+                        aria-label="장바구니"
+                        className="flex h-10 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-blue-600 md:px-3 md:text-sm"
+                    >
+                        <FiShoppingBag className="h-4 w-4 shrink-0" />
+                        <span className="hidden md:inline">장바구니</span>
+                    </Link>
                 </nav>
+                {/* 카테고리 네비 */}
+                {/* <nav aria-label="사용자메뉴">
+
+                    
+                </nav> */}
+
+
             </div>
         </header>
     );
