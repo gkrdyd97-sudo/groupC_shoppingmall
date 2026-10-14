@@ -26,9 +26,14 @@ export default function CartPage() {
             ),
         );
     };
+    const onDelete = (id: number) => {
+        setItems(
+            items.filter((item) => item.id !== id )
+        )
+    }
 
     return (
-        <>
+        <div className='max-w-2xl mx-auto p-15'>
             <h1>장바구니</h1>
             {items.length === 0 ? (
                 <div>장바구니가 비어있습니다.</div>
@@ -38,9 +43,10 @@ export default function CartPage() {
                         key={item.id}
                         {...item}
                         onChangeItem={onChangeItem}
+                        onDelete={onDelete}
                     />
                 ))
             )}
-        </>
+        </div>
     );
 }

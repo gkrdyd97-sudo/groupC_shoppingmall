@@ -14,7 +14,7 @@ export default function Footer() {
                     {/* 서비스 소개 */}
                     <div className="space-y-2">
                         <h3 className="text-sm font-bold text-gray-900">
-                            쇼핑몰 소개
+                            RNDO
                         </h3>
                         <p className="text-xs leading-relaxed text-gray-500">
                             쇼핑몰 자세한 소개 내용 작성...
@@ -63,7 +63,7 @@ export default function Footer() {
                             운영시간: 평일 09:00 - 18:00
                         </p>
                         <p className="text-xs text-gray-400">
-                            문의: yonggyo00@kakao.com
+                            문의: RNDO@kakao.com
                         </p>
                     </div>
                 </div>

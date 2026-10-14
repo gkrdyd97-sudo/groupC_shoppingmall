@@ -4,6 +4,7 @@ import { type Cart } from '../types/Cart.types';
 
 type CartProps = Cart & {
     onChangeItem: (id: number, type: 'plus' | 'minus') => void;
+    onDelete: (id: number) => void;
 };
 
 export default function CartItem({
@@ -12,7 +13,8 @@ export default function CartItem({
     productName,
     quantity,
     price,
-    onChangeItem
+    onChangeItem,
+    onDelete,
 }: CartProps) {
     return (
         <div className="flex">
@@ -20,9 +22,17 @@ export default function CartItem({
             <div>{productName}</div>
             <div>{price * quantity}</div>
             <div className="flex">
+                <Button type="button" onClick={() => onChangeItem(id, 'minus')}>
+                    -
+                </Button>
                 <Input type="number" value={quantity} readOnly />
-                <Button type="button" onClick={() => onChangeItem(id, 'minus')}>-</Button>
-                <Button type="button" onClick={() => onChangeItem(id, 'plus')}>+</Button>
+
+                <Button type="button" onClick={() => onChangeItem(id, 'plus')}>
+                    +
+                </Button>
+                <Button type="button" onClick={() => onDelete(id)}>
+                    삭제
+                </Button>
             </div>
         </div>
     );

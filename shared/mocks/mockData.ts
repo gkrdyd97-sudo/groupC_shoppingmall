@@ -244,4 +244,5 @@ export const MOCK_CART_ITEMS: Cart[] = [
         quantity: 2,
         price: 10000,
     },
+               
 ];
