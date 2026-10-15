@@ -1,68 +1,170 @@
-import Link from "next/link";
+'use client';
+
+import Link from 'next/link';
+import { useState, type ChangeEvent } from 'react';
+import {
+    FaCheckSquare,
+    FaRegCheckSquare,
+} from 'react-icons/fa';
+
+import type {
+    RegisterFormType,
+} from '@/domains/auth/types/auth.types';
 
 export default function RegisterForm() {
-  return (
-    <div className="auth-form">
-      <div className="auth-brand">RNDO</div>
+    const [form, setForm] = useState<RegisterFormType>({
+        email: '',
+        password: '',
+        passwordConfirm: '',
+        name: '',
+        agreeAll: false,
+        agreeService: false,
+        agreePrivacy: false,
+    });
 
-      <p className="auth-description">
-        RNDO 회원이 되어 다양한 혜택을 받아보세요.
-      </p>
+    const onChange = (
+        event: ChangeEvent<HTMLInputElement>
+    ) => {
+        const { name, value } = event.target;
 
-      <form className="auth-form-content">
-        <input
-          className="auth-input"
-          type="email"
-          placeholder="이메일"
-        />
+        setForm((previous) => ({
+            ...previous,
+            [name]: value,
+        }));
+    };
 
-        <input
-          className="auth-input"
-          type="password"
-          placeholder="비밀번호"
-        />
+    const onToggle = (
+        name:
+            | 'agreeAll'
+            | 'agreeService'
+            | 'agreePrivacy'
+    ) => {
+        setForm((previous) => ({
+            ...previous,
+            [name]: !previous[name],
+        }));
+    };
 
-        <input
-          className="auth-input"
-          type="password"
-          placeholder="비밀번호 확인"
-        />
+    return (
+        <div className="auth-form">
+            <div className="auth-brand">
+                RNDO
+            </div>
 
-        <input
-          className="auth-input"
-          type="text"
-          placeholder="이름"
-        />
+            <p className="auth-description">
+                RNDO 회원이 되어 다양한 혜택을 받아보세요.
+            </p>
 
-        <div className="agreement-list">
-          <label>
-            <input type="checkbox" />
-            <span>전체 약관에 동의합니다.</span>
-          </label>
+            <form className="auth-form-content">
+                <input
+                    className="auth-input"
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={onChange}
+                    placeholder="이메일"
+                />
 
-          <label>
-            <input type="checkbox" />
-            <span>이용약관에 동의합니다.</span>
-          </label>
+                <input
+                    className="auth-input"
+                    type="password"
+                    name="password"
+                    value={form.password}
+                    onChange={onChange}
+                    placeholder="비밀번호"
+                />
 
-          <label>
-            <input type="checkbox" />
-            <span>개인정보 처리방침에 동의합니다.</span>
-          </label>
+                <input
+                    className="auth-input"
+                    type="password"
+                    name="passwordConfirm"
+                    value={form.passwordConfirm}
+                    onChange={onChange}
+                    placeholder="비밀번호 확인"
+                />
+
+                <input
+                    className="auth-input"
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={onChange}
+                    placeholder="이름"
+                />
+
+                <div className="agreement-list">
+                    <button
+                        className="agreement-item"
+                        type="button"
+                        onClick={() =>
+                            onToggle('agreeAll')
+                        }
+                        aria-pressed={form.agreeAll}
+                    >
+                        {form.agreeAll ? (
+                            <FaCheckSquare />
+                        ) : (
+                            <FaRegCheckSquare />
+                        )}
+
+                        <span>
+                            전체 약관에 동의합니다.
+                        </span>
+                    </button>
+
+                    <button
+                        className="agreement-item"
+                        type="button"
+                        onClick={() =>
+                            onToggle('agreeService')
+                        }
+                        aria-pressed={form.agreeService}
+                    >
+                        {form.agreeService ? (
+                            <FaCheckSquare />
+                        ) : (
+                            <FaRegCheckSquare />
+                        )}
+
+                        <span>
+                            이용약관에 동의합니다.
+                        </span>
+                    </button>
+
+                    <button
+                        className="agreement-item"
+                        type="button"
+                        onClick={() =>
+                            onToggle('agreePrivacy')
+                        }
+                        aria-pressed={form.agreePrivacy}
+                    >
+                        {form.agreePrivacy ? (
+                            <FaCheckSquare />
+                        ) : (
+                            <FaRegCheckSquare />
+                        )}
+
+                        <span>
+                            개인정보 처리방침에 동의합니다.
+                        </span>
+                    </button>
+                </div>
+
+                <button
+                    className="auth-button black-button"
+                    type="button"
+                >
+                    회원가입
+                </button>
+            </form>
+
+            <div className="login-guide">
+                이미 회원이신가요?{' '}
+                <Link href="/login">
+                    로그인하기
+                </Link>
+            </div>
         </div>
-
-        <button
-          className="auth-button black-button"
-          type="button"
-        >
-          회원가입
-        </button>
-      </form>
-
-      <div className="login-guide">
-        이미 회원이신가요?{" "}
-        <Link href="/login">로그인하기</Link>
-      </div>
-    </div>
-  );
+    );
 }

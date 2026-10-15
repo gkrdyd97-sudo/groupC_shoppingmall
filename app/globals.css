@@ -196,15 +196,6 @@
   border-color: #111111;
 }
 
-/* 자동 로그인 */
-.auto-login {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 8px 0 14px;
-  color: #555555;
-  font-size: 13px;
-}
 
 /* 공통 버튼 */
 .auth-button {
@@ -274,19 +265,32 @@
 .agreement-list {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
   margin: 12px 0 16px;
-  color: #555555;
-  font-size: 13px;
 }
 
-/* 약관 체크박스와 글자 */
-.agreement-list label {
-  display: flex;
+/* 약관 체크 버튼 */
+.agreement-item {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #555555;
+  font-size: 13px;
+  cursor: pointer;
 }
 
+/* 체크 아이콘 */
+.agreement-item svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: #111111;
+}
 /* 로그인 안내 */
 .login-guide {
   margin-top: 24px;

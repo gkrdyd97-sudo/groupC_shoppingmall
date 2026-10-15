@@ -32,14 +32,7 @@ export default function LoginForm({
                     onChange={onChange}
                 />
 
-                <input
-                    className="auth-input"
-                    type="password"
-                    name="password"
-                    value={form.password}
-                    placeholder="비밀번호"
-                    onChange={onChange}
-                />
+       
 
                 <label className="auto-login" onClick={onToggle}>
                     {form.autoLogin ? <FaCheckSquare /> : <FaRegCheckSquare />}
