@@ -1,0 +1,144 @@
+import { type Product } from '@/domains/products/types/Product.types';
+
+export const products: Product[] = [
+    {
+        id: 1001,
+        category: 'tops',
+        brand: 'RNDO',
+        name: '라이트 러닝 윈드 재킷',
+        price: 89000,
+        images: [
+            '/images/products/top1-1.jpg',
+            '/images/products/top1-2.jpg',
+            '/images/products/top1-3.jpg',
+            '/images/products/top1-4.jpg',
+        ],
+        description:
+            '가볍고 바람을 막아주는 데일리 러닝 재킷. 후드와 지퍼 포켓을 갖춘 러닝용 아우터입니다.',
+        styleCode: 'RNDO-T001',
+        country: '베트남',
+        sizes: ['S', 'M', 'L', 'XL'],
+    },
+    {
+        id: 1002,
+        category: 'tops',
+        brand: 'RNDO',
+        name: '에어핏 하프집업 롱슬리브',
+        price: 69000,
+        images: [
+            '/images/products/top2-1.jpg',
+            '/images/products/top2-2.jpg',
+            '/images/products/top2-3.jpg',
+            '/images/products/top2-4.jpg',
+        ],
+        description:
+            '땀을 빠르게 흡수하고 쾌적함을 유지하도록 디자인한 기능성 러닝 상의입니다.',
+        styleCode: 'RNDO-T002',
+        country: '베트남',
+        sizes: ['S', 'M', 'L', 'XL'],
+    },
+    {
+        id: 2001,
+        category: 'bottoms',
+        brand: 'RNDO',
+        name: '러닝 포켓 쇼츠',
+        price: 49000,
+        images: [
+            '/images/products/bottom1_1_front.jpg',
+            '/images/products/bottom1_2_flat.jpg',
+            '/images/products/bottom1_3_side.jpg',
+            '/images/products/bottom1_4_back.jpg',
+        ],
+        description:
+            '가볍고 통기성이 좋은 블랙 7인치 러닝 쇼츠입니다. 사이드 스플릿 헴으로 보폭이 자유롭고, 뒤쪽 리플렉티브 지퍼 포켓에 키나 카드를 안전하게 넣을 수 있습니다. 허리 드로코드로 핏을 조절할 수 있습니다.',
+        styleCode: 'RNDO-BT001',
+        country: 'KOREA',
+        sizes: ['S', 'M', 'L', 'XL'],
+    },
+    {
+        id: 2002,
+        category: 'bottoms',
+        brand: 'RNDO',
+        name: '우먼 클래식 레깅스',
+        price: 69000,
+        images: [
+            '/images/products/bottom2_1_front.jpg',
+            '/images/products/bottom2_2_flat.jpg',
+            '/images/products/bottom2_3_side.jpg',
+            '/images/products/bottom2_4_back.jpg',
+        ],
+        description:
+            '하이라이즈 밴드로 복부를 안정적으로 잡아주는 차콜 러닝 레깅스입니다. 신축성 좋은 기능성 원단이 근육을 지지하고, 종아리 뒤쪽 타공 디테일로 장거리 러닝에도 쾌적합니다.',
+        styleCode: 'RNDO-BT002',
+        country: 'KOREA',
+        sizes: ['S', 'M', 'X', 'XL'],
+    },
+    {
+        id: 3001,
+        category: 'accessories',
+        brand: 'RNDO',
+        name: '퍼포먼스 러닝 선글라스',
+        price: 79000,
+        images: [
+            `/images/products/Sunglass1.jpg`,
+            `/images/products/Sunglass2.jpg`,
+            `/images/products/Sunglass3.jpg`,
+        ],
+        description:
+            '러닝 중 선명한 시야와 안정적인 착용감을 제공하는 RNDO 퍼포먼스 선글라스입니다. 블랙 렌즈와 슬림한 프레임으로 스포티한 스타일을 완성하며, 가벼운 디자인으로 러닝과 다양한 야외 활동에 적합합니다.',
+        styleCode: 'RNDO-AC001',
+        country: 'KOREA',
+        sizes: ['FREE'],
+    },
+    {
+        id: 3002,
+        category: 'accessories',
+        brand: 'RNDO',
+        name: '에어 메쉬 러닝 캡',
+        price: 29000,
+        images: [
+            `/images/products/cap1.jpg`,
+            `/images/products/cap2.jpg`,
+            `/images/products/cap3.jpg`,
+        ],
+        description:
+            '블랙 메쉬 소재와 오렌지 컬러의 RNDO 로고가 돋보이는 러닝 캡입니다. 통기성을 고려한 메쉬 디자인으로 러닝 중 쾌적한 착용감을 제공하며, 뒷면의 조절 스트랩으로 사이즈를 조절할 수 있습니다. 가벼운 디자인으로 러닝과 일상생활 모두에 활용하기 좋습니다.',
+        styleCode: 'RNDO-AC002',
+        country: 'KOREA',
+        sizes: ['FREE'],
+    },
+    {
+        id: 4001,
+        category: 'shoes',
+        brand: 'RNDO',
+        name: '호무라 OG+',
+        price: 169000,
+        images: [
+            `https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_1000,h_1000/global/409125/10/sv01/fnd/KOR/fmt/png`,
+            `https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_1000,h_1000/global/409125/10/mod01/fnd/KOR/fmt/png`,
+            `https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_1000,h_1000/global/409125/10/sv02/fnd/KOR/fmt/png`,
+        ],
+        description:
+            '2000년대 아카이브 모델을 1:1로 재현한 리이슈 스타일로, PUMA의 하이테크 퍼포먼스 헤리티지를 담은 모델입니다. 메쉬 베이스와 합성 오버레이, 대담한 컬러 조합으로 Y2K 특유의 감성을 강조했으며, 메탈릭 합성 Formstrip과 힐 히트컷 디테일로 테크웨어 무드와 러닝 스타일을 현대적으로 재해석했습니다.',
+        styleCode: '409125-10',
+        country: 'VIETNAM',
+        sizes: ['230', '240', '250', '260', '270', '280'],
+    },
+    {
+        id: 4002,
+        category: 'shoes',
+        brand: 'RNDO',
+        name: '퓨처 9 프로 FG/AG',
+        price: 189000,
+        images: [
+            `https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_1000,h_1000/global/109129/03/sv01/fnd/KOR/fmt/png`,
+            `https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_1000,h_1000/global/109129/03/bv/fnd/KOR/fmt/png`,
+            `https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_1000,h_1000/global/109129/03/sv02/fnd/KOR/fmt/png`,
+        ],
+        description:
+            '이중 레이어 어퍼가 제2의 피부처럼 발의 움직임에 반응하며, 자유로운 움직임을 방해하지 않으면서 발을 견고하게 잡아주는 축구화입니다. 어퍼 상단의 타겟 3D 그립 존이 정교한 볼 컨트롤을 지원하고, 피벗 포인트 중심의 원형 스터드 아웃솔이 360도 전방위 민첩성을 제공합니다. 천연 잔디(FG)와 인조 잔디(AG) 모두에서 사용 가능합니다.',
+        styleCode: '109129-03',
+        country: 'VIETNAM',
+        sizes: ['260', '265', '270', '275', '280'],
+    },
+];
