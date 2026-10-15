@@ -12,11 +12,11 @@ export default function Header() {
             )}
         >
             {/* 기본 모바일: h-14, px-4 / md 이상: h-16, px-6 */}
-            <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 md:h-16 md:px-6">
+            <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 md:h-20 md:px-6">
                 {/* 로고 영역 */}
                 <Link
                     href="/"
-                    className="text-lg font-black tracking-tight text-white transition-colors hover:text-blue-600 md:text-xl"
+                    className="text-xl font-black tracking-tight text-white transition-colors hover:text-blue-600 md:text-2xl"
                 >
                     RNDO
                 </Link>
@@ -64,9 +64,7 @@ export default function Header() {
                     </Link>
                 </nav>
             </div>
-            <CategoryNav>
-
-            </CategoryNav>
+            <CategoryNav />
         </header>
     );
 }
