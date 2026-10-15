@@ -7,14 +7,14 @@ export const MOCK_CATEGORIES: Category[] = [
     {
         id: 'cat-best',
         parent_id: null,
-        name: '베스트',
+        name: 'BEST',
         depth: 1,
         sort_order: 1,
     },
     {
         id: 'cat-shoes',
         parent_id: null,
-        name: '러닝화',
+        name: 'SHOES',
         depth: 1,
         sort_order: 2,
         children: [
@@ -37,7 +37,7 @@ export const MOCK_CATEGORIES: Category[] = [
     {
         id: 'cat-wear',
         parent_id: null,
-        name: '웨어',
+        name: 'WEAR',
         depth: 1,
         sort_order: 3,
         children: [
@@ -92,7 +92,7 @@ export const MOCK_CATEGORIES: Category[] = [
     {
         id: 'cat-goods',
         parent_id: null,
-        name: '소품',
+        name: 'ACC',
         depth: 1,
         sort_order: 4,
         children: [

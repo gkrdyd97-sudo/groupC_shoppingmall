@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { products } from '@/shared/mocks/products.mock';
 import { formatPrice } from '@/shared/utils/formatPrice';
+import { Suspense } from 'react';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -10,6 +11,7 @@ export default async function ProductDetailPage({
     params,
 }: PageProps): Promise<React.JSX.Element> {
     const { id } = await params;
+
     const product = products.find((p) => p.id === Number(id));
 
     if (!product) notFound();
