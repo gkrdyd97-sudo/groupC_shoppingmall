@@ -1,14 +1,16 @@
+import Link from 'next/link';
 import { formatPrice } from '@/shared/utils/formatPrice';
 import { type Product } from '../types/Product.types';
 
 export default function ProductCard({
+    id,
     brand,
     name,
     price,
     images,
 }: Product): React.JSX.Element {
     return (
-        <article>
+        <Link href={`/products/${id}`} className="group block">
             <div className="aspect-square overflow-hidden bg-gray-100">
                 <img
                     src={images[0]}
@@ -22,6 +24,6 @@ export default function ProductCard({
                 <h3 className="truncate text-sm">{name}</h3>
                 <p className="mt-1 text-sm font-bold">{formatPrice(price)}</p>
             </div>
-        </article>
+        </Link>
     );
 }

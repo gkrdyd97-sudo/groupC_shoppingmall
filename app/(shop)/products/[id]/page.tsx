@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { products } from '@/shared/mocks/products.mock';
 import { formatPrice } from '@/shared/utils/formatPrice';
 import { Suspense } from 'react';
+import ProductGallery from '@/domains/products/components/ProductGallery';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -20,13 +21,7 @@ export default async function ProductDetailPage({
         <div className="mx-auto max-w-5xl px-4 py-8 md:px-6">
             <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
                 {/* 왼쪽 — 이미지 */}
-                <div className="aspect-square overflow-hidden bg-gray-100">
-                    <img
-                        src={product.images[0]}
-                        alt={product.name}
-                        className="h-full w-full object-cover"
-                    />
-                </div>
+                <ProductGallery images={product.images} name={product.name} />
 
                 {/* 오른쪽 — 정보 */}
                 <div>
