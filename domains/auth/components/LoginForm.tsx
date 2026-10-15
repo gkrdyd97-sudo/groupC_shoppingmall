@@ -22,10 +22,7 @@ export default function LoginForm() {
           placeholder="비밀번호"
         />
 
-        <label className="auto-login">
-          <input type="checkbox" />
-          <span>자동 로그인</span>
-        </label>
+       
 
         <button
           className="auth-button black-button"
