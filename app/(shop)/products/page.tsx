@@ -2,7 +2,19 @@ import { products } from '@/shared/mocks/products.mock';
 import ProductCard from '@/domains/products/components/ProductCard';
 import React from 'react';
 
-export default function ProductList(): React.JSX.Element {
+interface SearchParamsType {
+    query?: string;
+    page?: number;
+}
+
+export default async function ProductList({
+    searchParams,
+}: {
+    searchParams: SearchParamsType;
+}): Promise<React.JSX.Element> {
+    const { query, page } = await searchParams;
+    console.log(query, page);
+
     return (
         <div className="mx-auto max-w-7xl px-4 py-8 md:px-6">
             <h1 className="mb-6 text-2xl font-bold">
