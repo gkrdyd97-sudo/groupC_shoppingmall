@@ -35,13 +35,37 @@ export default function RegisterForm() {
 
     const onToggle = (
         name:
-            | 'agreeAll'
             | 'agreeService'
             | 'agreePrivacy'
     ) => {
+        setForm((previous) => {
+            const nextService =
+                name === 'agreeService'
+                    ? !previous.agreeService
+                    : previous.agreeService;
+
+            const nextPrivacy =
+                name === 'agreePrivacy'
+                    ? !previous.agreePrivacy
+                    : previous.agreePrivacy;
+
+            return {
+                ...previous,
+                [name]: !previous[name],
+                agreeAll:
+                    nextService && nextPrivacy,
+            };
+        });
+    };
+
+    const onToggleAll = () => {
+        const nextValue = !form.agreeAll;
+
         setForm((previous) => ({
             ...previous,
-            [name]: !previous[name],
+            agreeAll: nextValue,
+            agreeService: nextValue,
+            agreePrivacy: nextValue,
         }));
     };
 
@@ -96,9 +120,7 @@ export default function RegisterForm() {
                     <button
                         className="agreement-item"
                         type="button"
-                        onClick={() =>
-                            onToggle('agreeAll')
-                        }
+                        onClick={onToggleAll}
                         aria-pressed={form.agreeAll}
                     >
                         {form.agreeAll ? (

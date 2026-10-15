@@ -1,19 +1,20 @@
+'use client';
+
 import Link from 'next/link';
-import { LoginFormType } from '@/app/(shop)/(auth)/login/page';
-import { FaRegCheckSquare, FaCheckSquare } from 'react-icons/fa';
-import { ChangeEvent } from 'react';
+import { useState, type ChangeEvent } from 'react';
 
-interface LoginFormProps {
-    form: LoginFormType;
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    onToggle: () => void;
-}
+export default function LoginForm() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-export default function LoginForm({
-    form,
-    onChange,
-    onToggle,
-}: LoginFormProps) {
+    const onEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value);
+    };
+
+    const onPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    };
+
     return (
         <div className="auth-form">
             <div className="auth-brand">RNDO</div>
@@ -26,18 +27,18 @@ export default function LoginForm({
                 <input
                     className="auth-input"
                     type="email"
-                    name="email"
-                    value={form.email}
+                    value={email}
+                    onChange={onEmailChange}
                     placeholder="이메일"
-                    onChange={onChange}
                 />
 
-       
-
-                <label className="auto-login" onClick={onToggle}>
-                    {form.autoLogin ? <FaCheckSquare /> : <FaRegCheckSquare />}
-                    <span>자동 로그인</span>
-                </label>
+                <input
+                    className="auth-input"
+                    type="password"
+                    value={password}
+                    onChange={onPasswordChange}
+                    placeholder="비밀번호"
+                />
 
                 <button className="auth-button black-button" type="button">
                     로그인
@@ -58,7 +59,9 @@ export default function LoginForm({
 
             <div className="find-links">
                 <Link href="/find-id">아이디 찾기</Link>
+
                 <span>|</span>
+
                 <Link href="/find-password">비밀번호 찾기</Link>
             </div>
         </div>
