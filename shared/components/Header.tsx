@@ -1,3 +1,4 @@
+import CategoryNav from '@/domains/categories/components/CategoryNav';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/cn';
 import Link from 'next/link';
@@ -7,7 +8,7 @@ export default function Header() {
     return (
         <header
             className={cn(
-                'backgrop-blur-md sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 transition-all',
+                'backgrop-blur-md sticky top-0 z-50 w-full border-b border-gray-200 bg-mist-900 transition-all',
             )}
         >
             {/* 기본 모바일: h-14, px-4 / md 이상: h-16, px-6 */}
@@ -15,7 +16,7 @@ export default function Header() {
                 {/* 로고 영역 */}
                 <Link
                     href="/"
-                    className="text-lg font-black tracking-tight text-gray-900 transition-colors hover:text-blue-600 md:text-xl"
+                    className="text-lg font-black tracking-tight text-white transition-colors hover:text-blue-600 md:text-xl"
                 >
                     RNDO
                 </Link>
@@ -56,20 +57,16 @@ export default function Header() {
                     <Link
                         href="/cart"
                         aria-label="장바구니"
-                        className="flex h-10 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-blue-600 md:px-3 md:text-sm"
+                        className="flex h-10 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-white transition-colors hover:bg-gray-100 hover:text-blue-600 md:px-3 md:text-sm"
                     >
                         <FiShoppingBag className="h-4 w-4 shrink-0" />
-                        <span className="hidden md:inline">장바구니</span>
+                        <span className="hidden md:inline"></span>
                     </Link>
                 </nav>
-                {/* 카테고리 네비 */}
-                {/* <nav aria-label="사용자메뉴">
-
-                    
-                </nav> */}
-
-
             </div>
+            <CategoryNav>
+
+            </CategoryNav>
         </header>
     );
 }
