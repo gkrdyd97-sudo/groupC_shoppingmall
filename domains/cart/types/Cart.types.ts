@@ -6,4 +6,5 @@ export interface Cart {
     productName: string;
     quantity: number;
     price: number;
+    check?: boolean;
 }
