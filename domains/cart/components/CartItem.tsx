@@ -2,7 +2,9 @@ import { FaTrashAlt } from 'react-icons/fa';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { type Cart } from '../types/Cart.types';
-import { FaPlus, FaMinus } from 'react-icons/fa';
+// import { FaPlus, FaMinus } from 'react-icons/fa';
+import { TfiPlus, TfiMinus } from 'react-icons/tfi';
+
 import { MdCheckBoxOutlineBlank, MdCheckBox } from 'react-icons/md';
 import Image from 'next/image';
 type CartProps = Cart & {
@@ -42,27 +44,28 @@ export default function CartItem({
                 </div>
             </div>
             <div className="flex items-center">
-                <Button
-                    type="button"
-                    className="cursor-pointer"
-                    onClick={() => onChangeItem(id, 'minus')}
-                >
-                    <FaMinus />
-                </Button>
-                <Input
-                    type="number"
-                    value={quantity}
-                    readOnly
-                    className="w-13 text-right"
-                />
-                <Button
-                    type="button"
-                    className="cursor-pointer"
-                    onClick={() => onChangeItem(id, 'plus')}
-                >
-                    <FaPlus />
-                </Button>
-
+                <div className="flex">
+                    <button
+                        type="button"
+                        className="mr-1 cursor-pointer rounded-sm border px-2"
+                        onClick={() => onChangeItem(id, 'minus')}
+                    >
+                        <TfiMinus />
+                    </button>
+                    <Input
+                        type="number"
+                        value={quantity}
+                        readOnly
+                        className="w-13 text-right"
+                    />
+                    <button
+                        type="button"
+                        className="ml-1 cursor-pointer rounded-sm border px-2"
+                        onClick={() => onChangeItem(id, 'plus')}
+                    >
+                        <TfiPlus />
+                    </button>
+                </div>
                 <FaTrashAlt
                     onClick={() => onRemoveItem(id)}
                     className="ml-4 align-middle text-[25px]"

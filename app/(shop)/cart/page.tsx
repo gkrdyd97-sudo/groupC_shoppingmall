@@ -37,15 +37,14 @@ export default function CartPage() {
                           quantity:
                               type === 'plus'
                                   ? item.quantity + 1
-                                  : item.quantity - 1,
+                                  : item.quantity - 1 < 1
+                                    ? 1
+                                    : item.quantity - 1,
                       }
                     : item,
             ),
         );
     };
-    // const onDelete = (id: number) => {
-    //     setItems(items.filter((item) => item.id !== id));
-    // };
 
     const onRemoveItem = (id: number) => {
         setItems(items.filter((item) => item.id !== id));
@@ -59,6 +58,10 @@ export default function CartPage() {
         );
     };
 
+    const onSelectiveRemove = () => {
+        setItems((prev) => prev.filter((item) => !item.check));
+    };
+
     const isAllChecked = items.length > 0 && items.every((item) => item.check);
     const onToggleAll = () => {
         setItems((prev) =>
@@ -69,26 +72,36 @@ export default function CartPage() {
     const checkedCount = items.filter((item) => item.check).length;
 
     return (
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-7xl pb-40">
             <h1 className="mt-4 mb-5 border-b-1 pb-2">장바구니</h1>
             <div className="flex justify-between px-4">
                 {items.length === 0 ? (
                     <div className="grow">장바구니가 비어있습니다.</div>
                 ) : (
                     <div className="grow border-r-1 px-4">
-                        <label
-                            className="mb-3 flex cursor-pointer items-center gap-2"
-                            onClick={onToggleAll}
-                        >
-                            {isAllChecked ? (
-                                <MdCheckBox />
-                            ) : (
-                                <MdCheckBoxOutlineBlank />
-                            )}
-                            전체 선택 (
-                            {items.filter((item) => item.check).length}/
-                            {items.length})
-                        </label>
+                        <div className="flex justify-between border-b-1 px-4 pb-2">
+                            <label
+                                className="mb-3 flex cursor-pointer items-center gap-2"
+                                onClick={onToggleAll}
+                            >
+                                {isAllChecked ? (
+                                    <MdCheckBox />
+                                ) : (
+                                    <MdCheckBoxOutlineBlank />
+                                )}
+                                전체 선택 (
+                                {items.filter((item) => item.check).length}/
+                                {items.length})
+                            </label>
+                            <button
+                                type="button"
+                                className="border px-3"
+                                onClick={onSelectiveRemove}
+                            >
+                                선택 상품삭제
+                            </button>
+                        </div>
+
                         {items.map((item) => (
                             <CartItem
                                 key={item.id}
@@ -101,7 +114,10 @@ export default function CartPage() {
                     </div>
                 )}
                 <div className="ml-10 basis-90">
-                    <CartSummary checkedCount={checkedCount} totalPrice={totalPrice}/>
+                    <CartSummary
+                        checkedCount={checkedCount}
+                        totalPrice={totalPrice}
+                    />
                 </div>
             </div>
         </div>
