@@ -72,33 +72,35 @@ export default function CartPage() {
     const checkedCount = items.filter((item) => item.check).length;
 
     return (
-        <div className="mx-auto max-w-7xl pb-40">
-            <h1 className="mt-4 mb-5 border-b-1 pb-2">장바구니</h1>
-            <div className="flex justify-between px-4">
+        <div className="mx-auto mb-20 max-w-7xl pb-4">
+            <h1 className="my-4 border-b-1 pb-4 text-4xl">장바구니</h1>
+            <div className="flex justify-between px-1">
                 {items.length === 0 ? (
                     <div className="grow">장바구니가 비어있습니다.</div>
                 ) : (
                     <div className="grow border-r-1 px-4">
-                        <div className="flex justify-between border-b-1 px-4 pb-2">
+                        <div className="flex items-center justify-between border-b-1 px-4 pb-4">
                             <label
-                                className="mb-3 flex cursor-pointer items-center gap-2"
+                                className="item-center flex cursor-pointer gap-3"
                                 onClick={onToggleAll}
                             >
-                                {isAllChecked ? (
-                                    <MdCheckBox />
-                                ) : (
-                                    <MdCheckBoxOutlineBlank />
-                                )}
-                                전체 선택 (
+                                <span className="relative top-[5px]">
+                                    {isAllChecked ? (
+                                        <MdCheckBox />
+                                    ) : (
+                                        <MdCheckBoxOutlineBlank />
+                                    )}
+                                </span>
+                                전체선택 (
                                 {items.filter((item) => item.check).length}/
                                 {items.length})
                             </label>
                             <button
                                 type="button"
-                                className="border px-3"
+                                className="cursor-pointer rounded-sm border px-3 py-1"
                                 onClick={onSelectiveRemove}
                             >
-                                선택 상품삭제
+                                선택삭제
                             </button>
                         </div>
 
@@ -113,7 +115,7 @@ export default function CartPage() {
                         ))}
                     </div>
                 )}
-                <div className="ml-10 basis-90">
+                <div className="sticky top-40 ml-10 basis-90 self-start">
                     <CartSummary
                         checkedCount={checkedCount}
                         totalPrice={totalPrice}
