@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { products } from '@/shared/mocks/products.mock';
 import { formatPrice } from '@/shared/utils/formatPrice';
 import ProductGallery from '@/domains/products/components/ProductGallery';
+import ProductActions from '@/domains/products/components/ProductActions';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -33,19 +34,7 @@ export default async function ProductDetailPage({
                         {product.description}
                     </p>
 
-                    <div className="mt-6 border-t pt-6">
-                        <p className="mb-2 text-sm font-medium">사이즈</p>
-                        <div className="flex flex-wrap gap-2">
-                            {product.sizes.map((size) => (
-                                <span
-                                    key={size}
-                                    className="border border-gray-300 px-4 py-2 text-sm"
-                                >
-                                    {size}
-                                </span>
-                            ))}
-                        </div>
-                    </div>
+                    <ProductActions sizes={product.sizes} />
                 </div>
             </div>
 
