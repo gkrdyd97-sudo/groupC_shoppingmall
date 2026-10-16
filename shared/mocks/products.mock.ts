@@ -83,6 +83,7 @@ export const products: Product[] = [
             `/images/products/Sunglass1.png`,
             `/images/products/Sunglass2.png`,
             `/images/products/Sunglass3.png`,
+            `/images/products/Sunglass4.png`,
         ],
         description:
             '러닝 중 선명한 시야와 안정적인 착용감을 제공하는 RNDO 퍼포먼스 선글라스입니다. 블랙 렌즈와 슬림한 프레임으로 스포티한 스타일을 완성하며, 가벼운 디자인으로 러닝과 다양한 야외 활동에 적합합니다.',
@@ -100,6 +101,7 @@ export const products: Product[] = [
             `/images/products/cap1.png`,
             `/images/products/cap2.png`,
             `/images/products/cap3.png`,
+            `/images/products/cap4.png`,
         ],
         description:
             '블랙 메쉬 소재와 오렌지 컬러의 RNDO 로고가 돋보이는 러닝 캡입니다. 통기성을 고려한 메쉬 디자인으로 러닝 중 쾌적한 착용감을 제공하며, 뒷면의 조절 스트랩으로 사이즈를 조절할 수 있습니다. 가벼운 디자인으로 러닝과 일상생활 모두에 활용하기 좋습니다.',
