@@ -45,7 +45,7 @@ export default function Header() {
                         className="h-9 px-2.5 md:px-3"
                     >
                         <Link
-                            href="/login"
+                            href="/register"
                             className="flex items-center gap-1.5"
                         >
                             <FiUser className="h-3.5 w-3.5" />

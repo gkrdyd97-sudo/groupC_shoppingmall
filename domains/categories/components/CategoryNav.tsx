@@ -44,7 +44,7 @@ export default function CategoryNav() {
                         <div key={cat.id} className="relative">
                             {cat.children && cat.children.length > 0 ? (
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-gray-300 transition-colors outline-none hover:text-blue-400">
+                                    <DropdownMenuTrigger openOnHover delay={0} closeDelay={150} className="flex items-center gap-1 text-sm font-medium text-gray-300 transition-colors outline-none hover:text-blue-400">
                                         <span>{cat.name}</span>
                                         <FiChevronDown className="h-3.5 w-3.5 text-gray-400" />
                                     </DropdownMenuTrigger>
