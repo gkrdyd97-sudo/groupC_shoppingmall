@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import { products } from '@/shared/mocks/products.mock';
 import { formatPrice } from '@/shared/utils/formatPrice';
-import { Suspense } from 'react';
 import ProductGallery from '@/domains/products/components/ProductGallery';
 
 interface PageProps {
