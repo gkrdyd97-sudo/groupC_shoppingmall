@@ -17,12 +17,6 @@ export default function LoginForm() {
 
     return (
         <div className="auth-form">
-            <div className="auth-brand">RNDO</div>
-
-            <p className="auth-description">
-                로그인하고 더 편리하게 쇼핑해보세요.
-            </p>
-
             <form className="auth-form-content">
                 <input
                     className="auth-input"

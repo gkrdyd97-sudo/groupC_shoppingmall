@@ -71,9 +71,7 @@ export default function RegisterForm() {
 
     return (
         <div className="auth-form">
-            <div className="auth-brand">
-                RNDO
-            </div>
+            
 
             <p className="auth-description">
                 RNDO 회원이 되어 다양한 혜택을 받아보세요.
