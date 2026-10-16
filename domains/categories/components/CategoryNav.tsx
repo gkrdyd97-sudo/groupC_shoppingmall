@@ -8,6 +8,15 @@ import { MOCK_CATEGORIES } from '@/shared/mocks/mockData';
 import Link from 'next/link';
 import { FiChevronDown, FiSearch } from 'react-icons/fi';
 import { Input } from '@/shared/components/ui/input';
+import { type Category } from '@/domains/categories/types/category.types';
+
+function getLeafCategories(categories: Category[]): Category[] {
+    return categories.flatMap((cat) =>
+        cat.children && cat.children.length > 0
+            ? getLeafCategories(cat.children)
+            : [cat],
+    );
+}
 
 export default function CategoryNav() {
     return (
@@ -60,11 +69,15 @@ export default function CategoryNav() {
                                                 {cat.name} 전체보기
                                             </Link>
                                         </DropdownMenuItem>
-                                        {cat.children.map((sub) => (
+                                        {getLeafCategories(cat.children).map((sub) => (
                                             <DropdownMenuItem key={sub.id}>
                                                 <Link
-                                                    href={`/products?category=${sub.id}`}
-                                                    className="w-full cursor-pointer text-xs text-gray-700"
+                                                    href={
+                                                        sub.productId
+                                                        ? `/products/${sub.productId}`
+                                                        : `/products?category=${sub.id}`
+                                                    }
+                                                    className='w-full cursor-pointer text-xs text-gray-700'
                                                 >
                                                     {sub.name}
                                                 </Link>

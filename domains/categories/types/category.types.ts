@@ -5,4 +5,5 @@ export interface Category {
     depth: number;
     sort_order: number;
     children?: Category[];
+    productId?: number;
 }
