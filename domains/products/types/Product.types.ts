@@ -1,6 +1,6 @@
 export interface Product {
-    id: string;                  
-    gid: string;                 
+    id: string;
+    gid: string;
     styleCode: string;
     name: string;
     brand: string;
