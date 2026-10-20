@@ -6,8 +6,8 @@ export default function ProductCard({
     id,
     brand,
     name,
-    price,
-    images,
+    salePrice,
+    images[0],
 }: Product): React.JSX.Element {
     return (
         <Link href={`/products/${id}`} className="group block">

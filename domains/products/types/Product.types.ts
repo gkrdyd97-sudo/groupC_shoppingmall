@@ -1,12 +1,15 @@
 export interface Product {
-    id: number;
-    category: 'tops' | 'bottoms' | 'shoes' | 'accessories';
-    brand: string;
-    name: string;
-    price: number;
-    images: string[];
-    description: string;
+    id: string;                  
+    gid: string;                 
     styleCode: string;
-    country: string;
-    sizes: string[];
+    name: string;
+    brand: string;
+    shortDescription: string;
+    longDescription: string;
+    salePrice: number;
+    consumerPrice: number;
+    categoryId: string;
+    createdAt: string;
+    updatedAt: string | null;
+    deletedAt: string | null;
 }
