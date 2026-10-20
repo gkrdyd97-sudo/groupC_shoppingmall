@@ -53,7 +53,12 @@ export default function CategoryNav() {
                         <div key={cat.id} className="relative">
                             {cat.children && cat.children.length > 0 ? (
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger openOnHover delay={0} closeDelay={150} className="flex items-center gap-1 text-sm font-medium text-gray-300 transition-colors outline-none hover:text-blue-400">
+                                    <DropdownMenuTrigger
+                                        openOnHover
+                                        delay={0}
+                                        closeDelay={150}
+                                        className="flex items-center gap-1 text-sm font-medium text-gray-300 transition-colors outline-none hover:text-blue-400"
+                                    >
                                         <span>{cat.name}</span>
                                         <FiChevronDown className="h-3.5 w-3.5 text-gray-400" />
                                     </DropdownMenuTrigger>
@@ -69,20 +74,22 @@ export default function CategoryNav() {
                                                 {cat.name} 전체보기
                                             </Link>
                                         </DropdownMenuItem>
-                                        {getLeafCategories(cat.children).map((sub) => (
-                                            <DropdownMenuItem key={sub.id}>
-                                                <Link
-                                                    href={
-                                                        sub.productId
-                                                        ? `/products/${sub.productId}`
-                                                        : `/products?category=${sub.id}`
-                                                    }
-                                                    className='w-full cursor-pointer text-xs text-gray-700'
-                                                >
-                                                    {sub.name}
-                                                </Link>
-                                            </DropdownMenuItem>
-                                        ))}
+                                        {getLeafCategories(cat.children).map(
+                                            (sub) => (
+                                                <DropdownMenuItem key={sub.id}>
+                                                    <Link
+                                                        href={
+                                                            sub.productId
+                                                                ? `/products/${sub.productId}`
+                                                                : `/products?category=${sub.id}`
+                                                        }
+                                                        className="w-full cursor-pointer text-xs text-gray-700"
+                                                    >
+                                                        {sub.name}
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                            ),
+                                        )}
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             ) : (
@@ -90,7 +97,7 @@ export default function CategoryNav() {
                                     href={`/products?category=${cat.id}`}
                                     className="text-sm font-medium text-gray-300 transition-colors hover:text-blue-400"
                                 >
-                                    {cat.name}
+                                    ALL 
                                 </Link>
                             )}
                         </div>
