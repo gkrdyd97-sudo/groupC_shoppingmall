@@ -26,7 +26,7 @@ export const getCurrentUser = cache(async (): Promise<UserType> => {
     if (!profile) {
         return null;
     }
-    console.log('profile', profile);
+
     return {
         id: profile.id,
         name: profile.name,

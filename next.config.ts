@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
     },
     experimental: {
         agentFeedback: true,
+        authInterrupts: true,
     },
     cacheComponents: true,
     partialPrefetching: true,

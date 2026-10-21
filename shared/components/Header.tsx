@@ -1,9 +1,11 @@
+import { connection } from 'next/server';
 import CategoryNav from '@/domains/categories/components/CategoryNav';
 import { cn } from '@/shared/utils/cn';
 import Link from 'next/link';
 import { FiShoppingBag } from 'react-icons/fi';
-
+import AuthStatus from './AuthStatus';
 export default async function Header() {
+    await connection();
     return (
         <header
             className={cn(
@@ -36,6 +38,7 @@ export default async function Header() {
                         <FiShoppingBag className="h-4 w-4 shrink-0" />
                         <span className="hidden md:inline"></span>
                     </Link>
+                    <AuthStatus />
                 </nav>
             </div>
             <CategoryNav />

@@ -3,17 +3,19 @@
 import Footer from '@/shared/components/Footer';
 import Header from '@/shared/components/Header';
 import { Suspense } from 'react';
-import { getCurrentUser } from '@/domains/users/queries/getCurrentUser.query';
+
 export default async function MainPage({
     children,
 }: {
     children: React.ReactNode;
 }) {
     return (
-        <main>
-            <Header />
-            <Suspense fallback={<div>로딩중...</div>}>{children}</Suspense>
+        <>
+            <Suspense fallback={<div>로딩중...</div>}>
+                <Header />
+            </Suspense>
+            <main>{children}</main>
             <Footer />
-        </main>
+        </>
     );
 }
