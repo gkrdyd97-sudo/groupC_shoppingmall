@@ -1,153 +1,96 @@
 'use server';
-
+import { SHIPPING_FEE } from '@/domains/cart/constants/cart.constants';
+import { getCart } from '@/domains/cart/queries/getCart.query';
+import { getProductTotal } from '@/domains/cart/util/cartPrice';
 import { createServerClient } from '@/shared/lib/supabase';
 import { type ActionState } from '@/shared/types/action.types';
-import { type CreateOrderInput } from '../types/order.types';
+import type { PendingOrder, ShippingInput } from '../types/order.types';
+import { validateShipping } from '../util/orderValidation';
 
-// 임시 - 실제 로그인 연동 후 교체
-async function getCurrentUser() {
-    return {
-        id: '8685b727-1be4-43de-83aa-cc91da5ca595',
-    };
-}
-
+// 결제 요청 직전에 주문(ORDERS, ORDER_ITEMS)을 결제대기 상태로 저장
+// 금액은 클라이언트 값이 아니라 DB의 장바구니·상품 가격으로 계산하고,
+// 승인 페이지에서 이 금액과 토스가 돌려준 금액을 비교해 위변조를 막는다
 export async function createOrder(
-    input: CreateOrderInput,
-): Promise<ActionState<{ orderId: string }>> {
-    if (input.items.length === 0) {
-        return {
-            success: false,
-            message: '주문할 상품이 없습니다.',
-        };
+    cartIds: number[],
+    shipping: ShippingInput,
+): Promise<ActionState<PendingOrder>> {
+    if (cartIds.length === 0) {
+        return { success: false, message: '주문할 상품을 선택해주세요.' };
     }
 
-    for (const item of input.items) {
-        if (!Number.isInteger(item.quantity) || item.quantity < 1) {
-            return {
-                success: false,
-                message: '수량은 1 이상의 정수여야 합니다.',
-            };
-        }
-    }
-
-    const user = await getCurrentUser();
-    if (!user) {
+    const errors = validateShipping(shipping);
+    if (Object.keys(errors).length > 0) {
         return {
             success: false,
-            message: '로그인이 필요한 서비스입니다.',
+            message: '배송지 정보를 확인해주세요.',
+            errors,
         };
     }
 
     const supabase = createServerClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+        return { success: false, message: '로그인이 필요한 서비스입니다.' };
+    }
 
-    // 클라이언트가 보낸 가격은 신뢰하지 않고, 상품/옵션의 진짜 가격을 다시 조회
-    const productIds = input.items.map((item) => item.productId);
-    const { data: products, error: productError } = await supabase
-        .from('PRODUCTS')
-        .select('id, name, sale_price')
-        .in('id', productIds);
-
-    if (productError || !products) {
+    const items = await getCart(cartIds);
+    if (items.length !== cartIds.length) {
         return {
             success: false,
-            message: '상품 정보를 확인할 수 없습니다.',
+            message: '장바구니 정보가 변경되었습니다. 다시 확인해주세요.',
         };
     }
 
-    const optionIds = input.items
-        .map((item) => item.optionId)
-        .filter((id): id is string => Boolean(id));
+    const orderName =
+        items.length > 1
+            ? `${items[0].productName} 외 ${items.length - 1}건`
+            : items[0].productName;
+    const amount = getProductTotal(items) + SHIPPING_FEE;
 
-    const { data: options, error: optionError } =
-        optionIds.length > 0
-            ? await supabase
-                  .from('PRODUCT_OPTIONS')
-                  .select('id, item_name, add_price')
-                  .in('id', optionIds)
-            : { data: [], error: null };
+    const { data: order, error: orderError } = await supabase
+        .from('ORDERS')
+        .insert({
+            user_id: user.id,
+            status: 'PENDING',
+            order_name: orderName,
+            total_price: amount,
+            receiver_name: shipping.receiverName.trim(),
+            receiver_phone: shipping.receiverPhone.replace(/-/g, ''),
+            receiver_zipcode: shipping.receiverZipcode.trim(),
+            receiver_address: shipping.receiverAddress.trim(),
+        })
+        .select('id')
+        .single();
 
-    if (optionError) {
-        return {
-            success: false,
-            message: '옵션 정보를 확인할 수 없습니다.',
-        };
+    if (orderError || !order) {
+        console.error(orderError);
+        return { success: false, message: '주문 생성에 실패했습니다.' };
     }
 
-    // 서버에서 주문 항목을 다시 조립 (가격/이름은 지금 조회한 진짜 값만 사용)
-    const orderItems: {
-        productId: string;
-        optionId: string | null;
-        productName: string;
-        optionItemName: string | null;
-        productPrice: number;
-        optionPrice: number;
-        quantity: number;
-    }[] = [];
-
-    for (const item of input.items) {
-        const product = products.find((p) => p.id === item.productId);
-        if (!product) {
-            return {
-                success: false,
-                message: `상품을 찾을 수 없습니다 - ID:${item.productId}`,
-            };
-        }
-
-        const option = item.optionId
-            ? options?.find((o) => o.id === item.optionId)
-            : undefined;
-
-        if (item.optionId && !option) {
-            return {
-                success: false,
-                message: `옵션을 찾을 수 없습니다 - ID:${item.optionId}`,
-            };
-        }
-
-        orderItems.push({
-            productId: product.id,
-            optionId: option?.id ?? null,
-            productName: product.name,
-            optionItemName: option?.item_name ?? null,
-            productPrice: product.sale_price,
-            optionPrice: option?.add_price ?? 0,
+    const { error: itemsError } = await supabase.from('ORDER_ITEMS').insert(
+        items.map((item) => ({
+            order_id: order.id,
+            product_id: item.productId,
+            option_id: item.optionId ?? null,
+            product_name: item.productName,
+            product_price: item.price,
+            option_price: item.optionPrice ?? 0,
             quantity: item.quantity,
-        });
-    }
-
-    // 서버가 직접 계산한 총액 (클라이언트가 보낸 금액은 애초에 안 받음)
-    const totalPrice = orderItems.reduce(
-        (sum, item) => sum + (item.productPrice + item.optionPrice) * item.quantity,
-        0,
+        })),
     );
 
-    const { data: orderId, error: orderError } = await supabase.rpc(
-        'create_order_with_items',
-        {
-            p_user_id: user.id,
-            p_order_name: input.orderName,
-            p_order_email: input.orderEmail,
-            p_order_phone: input.orderPhone,
-            p_receiver_name: input.receiverName,
-            p_receiver_phone: input.receiverPhone,
-            p_receiver_zipcode: input.receiverZipcode,
-            p_receiver_address: input.receiverAddress,
-            p_receiver_address_sub: input.receiverAddressSub,
-            p_total_price: totalPrice,
-            p_items: orderItems,
-        },
-    );
-
-    if (orderError || !orderId) {
-        return {
-            success: false,
-            message: '주문 생성에 실패했습니다.',
-        };
+    if (itemsError) {
+        console.error(itemsError);
+        // 상품 저장에 실패하면 빈 주문이 남지 않도록 삭제
+        await supabase.from('ORDERS').delete().eq('id', order.id);
+        return { success: false, message: '주문 생성에 실패했습니다.' };
     }
 
     return {
         success: true,
-        message: '주문이 생성되었습니다.',
-        data: { orderId },
+        // ORDERS.id(uuid)를 토스 orderId로 사용 (영문/숫자/- 6~64자 규칙 충족)
+        data: { orderId: order.id, orderName, amount },
     };
 }
