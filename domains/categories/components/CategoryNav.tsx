@@ -18,6 +18,8 @@ function getLeafCategories(categories: Category[]): Category[] {
     );
 }
 
+const NAV_CATEGORIES = MOCK_CATEGORIES.filter((cat) => cat.id !== 'cat-best');
+
 export default function CategoryNav() {
     return (
         <div className="w-full border-b border-gray-800 bg-mist-900">
@@ -28,9 +30,9 @@ export default function CategoryNav() {
                         href="/products"
                         className="shrink-0 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black"
                     >
-                        전체
+                        전체상품
                     </Link>
-                    {MOCK_CATEGORIES.map((cat) => (
+                    {NAV_CATEGORIES.map((cat) => (
                         <Link
                             key={cat.id}
                             href={`/products?category=${cat.id}`}
@@ -47,13 +49,18 @@ export default function CategoryNav() {
                         href="/products"
                         className="text-sm font-bold text-white transition-colors hover:text-blue-400"
                     >
-                        전체 카테고리
+                        전체상품
                     </Link>
-                    {MOCK_CATEGORIES.map((cat) => (
+                    {NAV_CATEGORIES.map((cat) => (
                         <div key={cat.id} className="relative">
                             {cat.children && cat.children.length > 0 ? (
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger openOnHover delay={0} closeDelay={150} className="flex items-center gap-1 text-sm font-medium text-gray-300 transition-colors outline-none hover:text-blue-400">
+                                    <DropdownMenuTrigger
+                                        openOnHover
+                                        delay={0}
+                                        closeDelay={150}
+                                        className="flex items-center gap-1 text-sm font-medium text-gray-300 transition-colors outline-none hover:text-blue-400"
+                                    >
                                         <span>{cat.name}</span>
                                         <FiChevronDown className="h-3.5 w-3.5 text-gray-400" />
                                     </DropdownMenuTrigger>
@@ -69,20 +76,22 @@ export default function CategoryNav() {
                                                 {cat.name} 전체보기
                                             </Link>
                                         </DropdownMenuItem>
-                                        {getLeafCategories(cat.children).map((sub) => (
-                                            <DropdownMenuItem key={sub.id}>
-                                                <Link
-                                                    href={
-                                                        sub.productId
-                                                        ? `/products/${sub.productId}`
-                                                        : `/products?category=${sub.id}`
-                                                    }
-                                                    className='w-full cursor-pointer text-xs text-gray-700'
-                                                >
-                                                    {sub.name}
-                                                </Link>
-                                            </DropdownMenuItem>
-                                        ))}
+                                        {getLeafCategories(cat.children).map(
+                                            (sub) => (
+                                                <DropdownMenuItem key={sub.id}>
+                                                    <Link
+                                                        href={
+                                                            sub.productId
+                                                                ? `/products/${sub.productId}`
+                                                                : `/products?category=${sub.id}`
+                                                        }
+                                                        className="w-full cursor-pointer text-xs text-gray-700"
+                                                    >
+                                                        {sub.name}
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                            ),
+                                        )}
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             ) : (

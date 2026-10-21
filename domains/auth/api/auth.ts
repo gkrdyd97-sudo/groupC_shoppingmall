@@ -5,81 +5,86 @@ type SignUpInput = {
     email: string;
     password: string;
     name: string;
+    phone: string;
+    gender: string;
     privateAgreement: boolean;
     tradeAgreement: boolean;
 };
 
-export async function signIn(
-    email: string,
-    password: string,
-): Promise<ActionState> {
-    const { error } =
-        await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
+export async function signUp(input: SignUpInput): Promise<ActionState> {
+    const {
+        data: { user: authUser },
+        error,
+    } = await supabase.auth.signUp({
+        email: input.email,
+        password: input.password,
+
+        // options: {
+        //   data: {
+        //     name: input.name,
+        //     phone: input.phone,
+        //     gender: input.gender,
+        //     private_agreement: input.privateAgreement,
+        //     trade_agreement: input.tradeAgreement,
+        //     user_type: 'USER',
+        //   },
+        // },
+    });
+
+    if (!authUser || error) {
+        return {
+            success: false,
+            message: error ? error.message : '회원가입에 실패했습니다.',
+        };
+    }
+
+    const userId = authUser?.id;
+
+    const { error: profileError } = await supabase.from('PROFILES').insert({
+        id: userId,
+        user_type: 'USER',
+        name: input.name,
+        phone: input.phone,
+        gender: input.gender,
+        private_agree: input.privateAgreement,
+        trade_agree: input.tradeAgreement,
+    });
+
+    if (profileError) {
+        return {
+            success: false,
+            message: profileError
+                ? profileError.message
+                : '회원가입에 실패했습니다.',
+        };
+    }
+
+    return {
+        success: true,
+        message: '회원가입이 완료되었습니다. 이메일 인증이 필요할 수 있습니다.',
+    };
+}
+
+type SignInInput = {
+    email: string;
+    password: string;
+};
+
+export async function signIn(input: SignInInput): Promise<ActionState> {
+    const { error } = await supabase.auth.signInWithPassword({
+        email: input.email,
+        password: input.password,
+    });
 
     if (error) {
         return {
             success: false,
-            message:
-                '이메일 또는 비밀번호가 올바르지 않습니다.',
+            message: '이메일 또는 비밀번호를 확인해주세요.',
         };
     }
 
     return {
         success: true,
         message: '로그인되었습니다.',
-    };
-}
-
-export async function signUp({
-    email,
-    password,
-    name,
-    privateAgreement,
-    tradeAgreement,
-}: SignUpInput): Promise<ActionState> {
-    const { error } =
-        await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    name,
-                    private_agreement: privateAgreement,
-                    trade_agreement: tradeAgreement,
-                },
-            },
-        });
-
-    if (error) {
-        return {
-            success: false,
-            message: error.message,
-        };
-    }
-
-    return {
-        success: true,
-        message:
-            '회원가입이 완료되었습니다. 이메일을 확인해주세요.',
-    };
-}
-
-export async function signOut(): Promise<ActionState> {
-    const { error } =
-        await supabase.auth.signOut();
-
-    if (error) {
-        return {
-            success: false,
-            message: '로그아웃에 실패했습니다.',
-        };
-    }
-
-    return {
-        success: true,
-        message: '로그아웃되었습니다.',
     };
 }
