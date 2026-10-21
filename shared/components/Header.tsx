@@ -1,10 +1,11 @@
+import { connection } from 'next/server';
 import CategoryNav from '@/domains/categories/components/CategoryNav';
 import { cn } from '@/shared/utils/cn';
 import Link from 'next/link';
 import { FiShoppingBag } from 'react-icons/fi';
-import AuthStatus from '@/shared/components/AuthStatus';
-
-export default function Header() {
+import AuthStatus from './AuthStatus';
+export default async function Header() {
+    await connection();
     return (
         <header
             className={cn(
