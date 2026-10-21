@@ -1,9 +1,13 @@
 export interface Category {
-    id: string;
-    parent_id: string | null;
+    id?: string;
+    parentId?: string | null;
     name: string;
-    depth: number;
-    sort_order: number;
+    depth?: number;
+    sortOrder?: number;
     children?: Category[];
-    productId?: number;
+}
+
+export interface CategoryInput {
+    name: string;
+    parentId?: string;
 }

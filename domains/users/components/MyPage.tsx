@@ -1,35 +1,35 @@
 'use client';
 
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FiUser, FiPackage, FiLogOut } from 'react-icons/fi';
-import { useAuthStore } from '@/shared/store/useAuthStore';
+// import { useAuthStore } from '@/shared/store/useAuthStore';
 
 export default function MyPage() {
-    const user = useAuthStore((state) => state.user);
-    const logout = useAuthStore((state) => state.logout);
-    const router = useRouter();
+    // const user = useAuthStore((state) => state.user);
+    // const logout = useAuthStore((state) => state.logout);
+    // const router = useRouter();
 
-    function handleLogout() {
-        logout();
-        router.push('/');
-    }
+    // function handleLogout() {
+    //     logout();
+    //     router.push('/');
+    // }
 
-    if (!user) {
-        return (
-            <div className="mx-auto max-w-7xl px-4 py-20 text-center">
-                <p className="mb-4 text-gray-600">
-                    로그인이 필요한 페이지입니다.
-                </p>
-                <Link
-                    href="/login"
-                    className="inline-block rounded-sm bg-black px-6 py-2 text-white"
-                >
-                    로그인하러 가기
-                </Link>
-            </div>
-        );
-    }
+    // if (!user) {
+    //     return (
+    //         <div className="mx-auto max-w-7xl px-4 py-20 text-center">
+    //             <p className="mb-4 text-gray-600">
+    //                 로그인이 필요한 페이지입니다.
+    //             </p>
+    //             <Link
+    //                 href="/login"
+    //                 className="inline-block rounded-sm bg-black px-6 py-2 text-white"
+    //             >
+    //                 로그인하러 가기
+    //             </Link>
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="mx-auto mb-20 max-w-7xl px-4 pb-4">
@@ -42,8 +42,8 @@ export default function MyPage() {
                     <FiUser className="h-6 w-6 text-gray-500" />
                 </div>
                 <div>
-                    <p className="text-lg font-bold">{user.id} 님</p>
-                    <p className="text-sm text-gray-500">RNDO 회원</p>
+                    {/* <p className="text-lg font-bold">{user.id} 님</p>
+                    <p className="text-sm text-gray-500">RNDO 회원</p> */}
                 </div>
             </section>
 
@@ -58,7 +58,7 @@ export default function MyPage() {
 
             <button
                 type="button"
-                onClick={handleLogout}
+                // onClick={handleLogout}
                 className="flex cursor-pointer items-center gap-2 text-sm text-gray-500 hover:text-black"
             >
                 <FiLogOut /> 로그아웃
