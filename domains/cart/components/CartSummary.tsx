@@ -1,12 +1,11 @@
 import { Button } from '@/shared/components/ui/button';
+import { SHIPPING_FEE } from '../constants/cart.constants';
 
 export interface CartSummaryProps {
     checkedCount: number;
     totalPrice: number;
     onCheckout?: () => void;
 }
-
-const SHIPPING_FEE = 3000;
 
 export default function CartSummary({
     checkedCount,
