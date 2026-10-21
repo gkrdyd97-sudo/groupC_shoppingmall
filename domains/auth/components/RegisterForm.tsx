@@ -7,21 +7,23 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { signUp } from '@/domains/auth/api/auth';
 import type { RegisterFormType } from '@/domains/auth/types/auth.types';
 
+const initialState: RegisterFormType = {
+    email: '',
+    password: '',
+    passwordConfirm: '',
+    name: '',
+    phone: '',
+    gender: '',
+
+    agreeAll: false,
+    agreeService: false,
+    agreePrivacy: false,
+};
+
 export default function RegisterForm() {
     const router = useRouter();
 
-    const [form, setForm] = useState<RegisterFormType>({
-        email: '',
-        password: '',
-        passwordConfirm: '',
-        name: '',
-        phone: '',
-        gender: '',
-
-        agreeAll: false,
-        agreeService: false,
-        agreePrivacy: false,
-    });
+    const [form, setForm] = useState<RegisterFormType>(initialState);
 
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -100,7 +102,10 @@ export default function RegisterForm() {
 
         alert(result.message);
 
+        setForm(initialState);
+
         router.push('/login');
+        router.refresh();
     };
 
     return (
