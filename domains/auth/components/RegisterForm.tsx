@@ -1,18 +1,23 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
-import { FaCheckSquare, FaRegCheckSquare } from 'react-icons/fa';
 
 import { signUp } from '@/domains/auth/api/auth';
 import type { RegisterFormType } from '@/domains/auth/types/auth.types';
 
 export default function RegisterForm() {
+    const router = useRouter();
+
     const [form, setForm] = useState<RegisterFormType>({
         email: '',
         password: '',
         passwordConfirm: '',
         name: '',
+        phone: '',
+        gender: '',
+
         agreeAll: false,
         agreeService: false,
         agreePrivacy: false,
@@ -22,43 +27,30 @@ export default function RegisterForm() {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
+    const onChange = (
+        event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    ) => {
+        const { name, value, type } = event.target;
+
+        const checked =
+            event.target instanceof HTMLInputElement
+                ? event.target.checked
+                : false;
 
         setForm((previous) => ({
             ...previous,
-            [name]: value,
+            [name]: type === 'checkbox' ? checked : value,
         }));
     };
 
-    const onToggle = (name: 'agreeService' | 'agreePrivacy') => {
-        setForm((previous) => {
-            const nextService =
-                name === 'agreeService'
-                    ? !previous.agreeService
-                    : previous.agreeService;
-
-            const nextPrivacy =
-                name === 'agreePrivacy'
-                    ? !previous.agreePrivacy
-                    : previous.agreePrivacy;
-
-            return {
-                ...previous,
-                [name]: !previous[name],
-                agreeAll: nextService && nextPrivacy,
-            };
-        });
-    };
-
-    const onToggleAll = () => {
-        const nextValue = !form.agreeAll;
+    const onAgreeAllChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const checked = event.target.checked;
 
         setForm((previous) => ({
             ...previous,
-            agreeAll: nextValue,
-            agreeService: nextValue,
-            agreePrivacy: nextValue,
+            agreeAll: checked,
+            agreeService: checked,
+            agreePrivacy: checked,
         }));
     };
 
@@ -67,23 +59,23 @@ export default function RegisterForm() {
 
         setErrorMessage('');
 
-        if (!form.email || !form.password) {
-            setErrorMessage('이메일과 비밀번호를 입력해주세요.');
-            return;
-        }
-
         if (form.password !== form.passwordConfirm) {
             setErrorMessage('비밀번호가 일치하지 않습니다.');
             return;
         }
 
-        if (!form.name) {
+        if (!form.agreeService || !form.agreePrivacy) {
+            setErrorMessage('약관 동의를 진행해주세요.');
+            return;
+        }
+
+        if (!form.name.trim()) {
             setErrorMessage('이름을 입력해주세요.');
             return;
         }
 
-        if (!form.agreeService || !form.agreePrivacy) {
-            setErrorMessage('필수 약관에 동의해주세요.');
+        if (!form.phone.trim()) {
+            setErrorMessage('전화번호를 입력해주세요.');
             return;
         }
 
@@ -93,6 +85,8 @@ export default function RegisterForm() {
             email: form.email,
             password: form.password,
             name: form.name,
+            phone: form.phone,
+            gender: form.gender,
             privateAgreement: form.agreePrivacy,
             tradeAgreement: form.agreeService,
         });
@@ -104,17 +98,13 @@ export default function RegisterForm() {
             return;
         }
 
-        alert(result.message ?? '회원가입이 완료되었습니다.');
+        alert(result.message);
 
-        window.location.href = '/login';
+        router.push('/login');
     };
 
     return (
         <div className="auth-form">
-            <p className="auth-description">
-                RNDO 회원이 되어 다양한 혜택을 받아보세요.
-            </p>
-
             <form className="auth-form-content" onSubmit={onSubmit}>
                 <input
                     className="auth-input"
@@ -123,7 +113,7 @@ export default function RegisterForm() {
                     value={form.email}
                     onChange={onChange}
                     placeholder="이메일"
-                    disabled={isLoading}
+                    required
                 />
 
                 <input
@@ -133,7 +123,7 @@ export default function RegisterForm() {
                     value={form.password}
                     onChange={onChange}
                     placeholder="비밀번호"
-                    disabled={isLoading}
+                    required
                 />
 
                 <input
@@ -143,7 +133,7 @@ export default function RegisterForm() {
                     value={form.passwordConfirm}
                     onChange={onChange}
                     placeholder="비밀번호 확인"
-                    disabled={isLoading}
+                    required
                 />
 
                 <input
@@ -153,55 +143,62 @@ export default function RegisterForm() {
                     value={form.name}
                     onChange={onChange}
                     placeholder="이름"
-                    disabled={isLoading}
+                    required
                 />
 
-                <div className="agreement-list">
-                    <button
-                        className="agreement-item"
-                        type="button"
-                        onClick={onToggleAll}
-                        aria-pressed={form.agreeAll}
-                    >
-                        {form.agreeAll ? (
-                            <FaCheckSquare />
-                        ) : (
-                            <FaRegCheckSquare />
-                        )}
+                <input
+                    className="auth-input"
+                    type="tel"
+                    name="phone"
+                    value={form.phone}
+                    onChange={onChange}
+                    placeholder="전화번호"
+                    required
+                />
 
-                        <span>전체 약관에 동의합니다.</span>
-                    </button>
+                <select
+                    className="auth-input"
+                    name="gender"
+                    value={form.gender}
+                    onChange={onChange}
+                >
+                    <option value="">성별 선택</option>
+                    <option value="MALE">남성</option>
+                    <option value="FEMALE">여성</option>
+                    <option value="OTHER">기타</option>
+                </select>
 
-                    <button
-                        className="agreement-item"
-                        type="button"
-                        onClick={() => onToggle('agreeService')}
-                        aria-pressed={form.agreeService}
-                    >
-                        {form.agreeService ? (
-                            <FaCheckSquare />
-                        ) : (
-                            <FaRegCheckSquare />
-                        )}
+                <label>
+                    <input
+                        type="checkbox"
+                        name="agreeAll"
+                        checked={form.agreeAll}
+                        onChange={onAgreeAllChange}
+                    />
+                    전체 약관에 동의합니다.
+                </label>
 
-                        <span>이용약관에 동의합니다.</span>
-                    </button>
+                <label>
+                    <input
+                        type="checkbox"
+                        name="agreeService"
+                        checked={form.agreeService}
+                        onChange={onChange}
+                    />
+                    이용약관에 동의합니다.
+                </label>
 
-                    <button
-                        className="agreement-item"
-                        type="button"
-                        onClick={() => onToggle('agreePrivacy')}
-                        aria-pressed={form.agreePrivacy}
-                    >
-                        {form.agreePrivacy ? (
-                            <FaCheckSquare />
-                        ) : (
-                            <FaRegCheckSquare />
-                        )}
+                <label>
+                    <input
+                        type="checkbox"
+                        name="agreePrivacy"
+                        checked={form.agreePrivacy}
+                        onChange={onChange}
+                    />
+                    개인정보 처리방침에 동의합니다.
+                </label>
 
-                        <span>개인정보 처리방침에 동의합니다.</span>
-                    </button>
-                </div>
+                {errorMessage && <p className="auth-error">{errorMessage}</p>}
 
                 <button
                     className="auth-button black-button"
@@ -210,12 +207,11 @@ export default function RegisterForm() {
                 >
                     {isLoading ? '가입 중...' : '회원가입'}
                 </button>
-
-                {errorMessage && <p className="auth-error">{errorMessage}</p>}
             </form>
 
-            <div className="login-guide">
-                이미 회원이신가요? <Link href="/login">로그인하기</Link>
+            <div className="register-login-link">
+                <span>이미 회원이신가요?</span>
+                <Link href="/login">로그인하기</Link>
             </div>
         </div>
     );
