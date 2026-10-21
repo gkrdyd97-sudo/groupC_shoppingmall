@@ -18,6 +18,8 @@ function getLeafCategories(categories: Category[]): Category[] {
     );
 }
 
+const NAV_CATEGORIES = MOCK_CATEGORIES.filter((cat) => cat.id !== 'cat-best');
+
 export default function CategoryNav() {
     return (
         <div className="w-full border-b border-gray-800 bg-mist-900">
@@ -28,9 +30,9 @@ export default function CategoryNav() {
                         href="/products"
                         className="shrink-0 rounded-full bg-white px-3 py-1 text-xs font-semibold text-black"
                     >
-                        전체
+                        전체상품
                     </Link>
-                    {MOCK_CATEGORIES.map((cat) => (
+                    {NAV_CATEGORIES.map((cat) => (
                         <Link
                             key={cat.id}
                             href={`/products?category=${cat.id}`}
@@ -47,9 +49,9 @@ export default function CategoryNav() {
                         href="/products"
                         className="text-sm font-bold text-white transition-colors hover:text-blue-400"
                     >
-                        전체 카테고리
+                        전체상품
                     </Link>
-                    {MOCK_CATEGORIES.map((cat) => (
+                    {NAV_CATEGORIES.map((cat) => (
                         <div key={cat.id} className="relative">
                             {cat.children && cat.children.length > 0 ? (
                                 <DropdownMenu>
@@ -97,7 +99,7 @@ export default function CategoryNav() {
                                     href={`/products?category=${cat.id}`}
                                     className="text-sm font-medium text-gray-300 transition-colors hover:text-blue-400"
                                 >
-                                    ALL 
+                                    {cat.name}
                                 </Link>
                             )}
                         </div>
