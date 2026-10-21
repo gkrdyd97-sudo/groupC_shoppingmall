@@ -13,6 +13,11 @@ import { formatPrice } from '@/shared/utils/formatPrice';
 import { useCartStore } from '@/domains/cart/store/cart.store';
 import { SHIPPING_FEE } from '@/domains/cart/constants/cart.constants';
 import { createOrder } from '../actions/order.actions';
+import { validateShipping } from '../util/orderValidation';
+import ShippingForm, {
+    INITIAL_SHIPPING,
+    type ShippingFormValues,
+} from './ShippingForm';
 
 const CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY ?? '';
 
@@ -32,6 +37,11 @@ export default function CheckoutForm() {
 
     const [widgets, setWidgets] = useState<TossPaymentsWidgets | null>(null);
     const [errorMessage, setErrorMessage] = useState('');
+    const [shipping, setShipping] =
+        useState<ShippingFormValues>(INITIAL_SHIPPING);
+    const [shippingErrors, setShippingErrors] = useState<
+        Record<string, string>
+    >({});
     const [isPending, startTransition] = useTransition();
     // StrictMode에서 effect가 두 번 실행돼도 위젯은 한 번만 렌더링
     const initializedRef = useRef(false);
@@ -69,20 +79,46 @@ export default function CheckoutForm() {
         widgets?.setAmount({ currency: 'KRW', value: amount });
     }, [widgets, amount]);
 
+    const handleShippingChange = (
+        name: keyof ShippingFormValues,
+        value: string,
+    ) => {
+        setShipping((prev) => ({ ...prev, [name]: value }));
+        setShippingErrors((prev) => ({ ...prev, [name]: '' }));
+    };
+
     const handlePayment = () => {
         if (!widgets) return;
         setErrorMessage('');
 
+        const { receiverAddressDetail, ...rest } = shipping;
+        const shippingInput = {
+            ...rest,
+            receiverAddress:
+                `${rest.receiverAddress.trim()} ${receiverAddressDetail.trim()}`.trim(),
+        };
+        const errors = validateShipping(shippingInput);
+        if (Object.keys(errors).length > 0) {
+            setShippingErrors(errors);
+            setErrorMessage('배송지 정보를 확인해주세요.');
+            return;
+        }
+
         startTransition(async () => {
-            // 서버에서 주문번호 발급 + 결제 금액 계산/저장
+            // 서버에서 주문 저장(결제대기) + 결제 금액 계산
             const result = await createOrder(
-                checkedItems.map(({ productName, price, quantity }) => ({
-                    productName,
-                    price,
-                    quantity,
+                checkedItems.map((item) => ({
+                    productId: String(item.productId),
+                    optionId: item.optionId,
+                    productName: item.productName,
+                    price: item.price,
+                    optionPrice: item.optionPrice,
+                    quantity: item.quantity,
                 })),
+                shippingInput,
             );
             if (!result.success || !result.data) {
+                setShippingErrors(result.errors ?? {});
                 setErrorMessage(result.message ?? '주문 생성에 실패했습니다.');
                 return;
             }
@@ -164,6 +200,17 @@ export default function CheckoutForm() {
                             </div>
                         </div>
                     ))}
+                </section>
+
+                <section className="mt-8">
+                    <h2 className="border-b-1 pb-4 text-xl font-bold">
+                        배송지
+                    </h2>
+                    <ShippingForm
+                        values={shipping}
+                        errors={shippingErrors}
+                        onChange={handleShippingChange}
+                    />
                 </section>
 
                 <section className="mt-8">

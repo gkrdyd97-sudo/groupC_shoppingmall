@@ -1,12 +1,9 @@
 // 토스페이먼츠 서버 API (시크릿 키 사용 → 서버에서만 import 할 것)
 import type {
     ConfirmPaymentResult,
-    PendingOrder,
     TossError,
     TossPayment,
 } from '../types/order.types';
-
-export const PENDING_ORDER_COOKIE = 'pending_order';
 
 const TOSS_API_URL = 'https://api.tosspayments.com/v1/payments';
 
@@ -17,15 +14,6 @@ function getAuthHeader(): string {
     }
     // 시크릿 키 뒤에 ':'를 붙여 base64 인코딩 (Basic 인증)
     return `Basic ${Buffer.from(`${secretKey}:`).toString('base64')}`;
-}
-
-export function parsePendingOrder(value?: string): PendingOrder | null {
-    if (!value) return null;
-    try {
-        return JSON.parse(value) as PendingOrder;
-    } catch {
-        return null;
-    }
 }
 
 // 결제 승인 API
@@ -53,10 +41,10 @@ export async function confirmPayment(params: {
 
     // 새로고침 등으로 승인이 중복 호출된 경우 → 이미 승인된 결제를 조회해서 보여줌
     if (error.code === 'ALREADY_PROCESSED_PAYMENT') {
-        const payment = await getPayment(params.paymentKey);
+        const payment = await getPaymentByOrderId(params.orderId);
         if (
             payment?.status === 'DONE' &&
-            payment.orderId === params.orderId &&
+            payment.paymentKey === params.paymentKey &&
             payment.totalAmount === params.amount
         ) {
             return { success: true, payment };
@@ -66,11 +54,13 @@ export async function confirmPayment(params: {
     return { success: false, error };
 }
 
-// 결제 조회 API
-// https://docs.tosspayments.com/reference#paymentkey로-결제-조회
-async function getPayment(paymentKey: string): Promise<TossPayment | null> {
+// orderId로 결제 조회 API (주문 확인 페이지의 결제수단·영수증 표시용)
+// https://docs.tosspayments.com/reference#orderid로-결제-조회
+export async function getPaymentByOrderId(
+    orderId: string,
+): Promise<TossPayment | null> {
     const res = await fetch(
-        `${TOSS_API_URL}/${encodeURIComponent(paymentKey)}`,
+        `${TOSS_API_URL}/orders/${encodeURIComponent(orderId)}`,
         {
             headers: { Authorization: getAuthHeader() },
             cache: 'no-store',
