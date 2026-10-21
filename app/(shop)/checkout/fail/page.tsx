@@ -50,20 +50,13 @@ export default async function CheckoutFailPage({
                 </dl>
             )}
 
-            <div className="mt-6 flex gap-2">
-                <Link
-                    href="/cart"
-                    className="flex h-12 flex-1 items-center justify-center rounded-lg border hover:bg-gray-50"
-                >
-                    장바구니로
-                </Link>
-                <Link
-                    href="/checkout"
-                    className="flex h-12 flex-1 items-center justify-center rounded-lg bg-blue-500 text-white hover:bg-blue-600"
-                >
-                    다시 결제하기
-                </Link>
-            </div>
+            {/* 체크아웃은 장바구니에서 고른 상품으로 시작하므로 장바구니로 보냄 */}
+            <Link
+                href="/cart"
+                className="mt-6 flex h-12 items-center justify-center rounded-lg bg-blue-500 text-white hover:bg-blue-600"
+            >
+                장바구니로 돌아가기
+            </Link>
         </div>
     );
 }

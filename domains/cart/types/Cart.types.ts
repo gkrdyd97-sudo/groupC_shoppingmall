@@ -1,9 +1,9 @@
 export interface Cart {
     id: number;
-    userId?: string;
-    imageUrl?: string;
     productId: string;
     productName: string;
+    brand?: string;
+    imageUrl?: string;
     optionId?: string;
     optionName?: string;
     quantity: number;

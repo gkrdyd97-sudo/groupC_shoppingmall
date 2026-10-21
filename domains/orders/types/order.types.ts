@@ -5,16 +5,6 @@ export interface PendingOrder {
     amount: number;
 }
 
-// 주문 생성 시 클라이언트에서 넘기는 상품 정보
-export interface OrderItemInput {
-    productId: string;
-    optionId?: string;
-    productName: string;
-    price: number;
-    optionPrice?: number;
-    quantity: number;
-}
-
 // 체크아웃에서 입력받는 배송지
 export interface ShippingInput {
     receiverName: string;
@@ -56,6 +46,7 @@ export interface OrderItem {
     product_price: number;
     option_price: number | null;
     quantity: number;
+    PRODUCT_OPTIONS: { item_name: string } | null;
 }
 
 export interface OrderWithItems extends Order {

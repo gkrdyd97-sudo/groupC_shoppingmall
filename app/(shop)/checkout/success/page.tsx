@@ -2,7 +2,11 @@
 // 토스 결제창 인증 성공 → successUrl?paymentKey&orderId&amount 로 리다이렉트
 // → DB 주문 금액 검증 후 서버에서 결제 승인 API 호출 → 주문 확인 페이지로 이동
 import { redirect } from 'next/navigation';
-import { getMyOrder, updateOrderStatus } from '@/domains/orders/api/order';
+import {
+    getMyOrder,
+    removeOrderedCartItems,
+    updateOrderStatus,
+} from '@/domains/orders/api/order';
 import { confirmPayment } from '@/domains/orders/api/payment';
 import type { ConfirmPaymentResult } from '@/domains/orders/types/order.types';
 
@@ -67,6 +71,7 @@ export default async function CheckoutSuccessPage({
 
     // 결제는 승인됐으므로 상태 변경에 실패해도 주문 확인 페이지로 보냄 (로그로 추적)
     await updateOrderStatus(orderId, 'PAID');
+    await removeOrderedCartItems(order);
 
     redirect(`/orders/${orderId}?completed=true`);
 }

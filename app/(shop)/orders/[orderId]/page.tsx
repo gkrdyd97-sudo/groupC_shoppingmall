@@ -2,10 +2,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CircleCheck } from 'lucide-react';
-import ClearCheckedCart from '@/domains/cart/components/ClearCheckedCart';
 import DeliveryStatus from '@/domains/orders/components/DeliveryStatus';
 import { getMyOrder } from '@/domains/orders/api/order';
 import { getPaymentByOrderId } from '@/domains/orders/api/payment';
+import type { OrderItem } from '@/domains/orders/types/order.types';
 import { formatPrice } from '@/shared/utils/formatPrice';
 
 type Params = Promise<{ orderId: string }>;
@@ -47,8 +47,10 @@ export default async function OrderDetailPage({
             ? null
             : await getPaymentByOrderId(order.id).catch(() => null);
 
+    const unitPrice = (item: OrderItem) =>
+        item.product_price + (item.option_price ?? 0);
     const productPrice = order.ORDER_ITEMS.reduce(
-        (acc, item) => acc + item.product_price * item.quantity,
+        (acc, item) => acc + unitPrice(item) * item.quantity,
         0,
     );
     const shippingFee = order.total_price - productPrice;
@@ -57,7 +59,6 @@ export default async function OrderDetailPage({
         <div className="mx-auto mb-20 max-w-3xl px-4 pb-4">
             {completed === 'true' ? (
                 <div className="my-10 flex flex-col items-center gap-3 text-center">
-                    <ClearCheckedCart />
                     <CircleCheck className="size-16 text-blue-500" />
                     <h1 className="text-2xl font-bold md:text-3xl">
                         결제가 완료되었습니다
@@ -96,12 +97,14 @@ export default async function OrderDetailPage({
                                 {item.product_name}
                             </div>
                             <div className="text-sm text-gray-500">
-                                {formatPrice(item.product_price)} ·{' '}
+                                {item.PRODUCT_OPTIONS &&
+                                    `옵션: ${item.PRODUCT_OPTIONS.item_name} · `}
+                                {formatPrice(unitPrice(item))} ·{' '}
                                 {item.quantity}개
                             </div>
                         </div>
                         <div className="shrink-0 font-bold">
-                            {formatPrice(item.product_price * item.quantity)}
+                            {formatPrice(unitPrice(item) * item.quantity)}
                         </div>
                     </div>
                 ))}

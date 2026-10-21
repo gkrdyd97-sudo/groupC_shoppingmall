@@ -1,7 +1,7 @@
 import { GoX } from 'react-icons/go';
-import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { type Cart } from '../types/Cart.types';
+import { getUnitPrice } from '../util/cartPrice';
 // import { FaPlus, FaMinus } from 'react-icons/fa';
 import { TfiPlus, TfiMinus } from 'react-icons/tfi';
 
@@ -17,15 +17,17 @@ export default function CartItem({
     id,
     imageUrl,
     productName,
+    optionName,
     quantity,
     price,
+    optionPrice,
     check,
     onChangeItem,
     onRemoveItem,
     onToggle,
 }: CartProps) {
     return (
-        <div className="md:item-center flex flex-col gap-3 border-b-1 py-4 md:flex-row md:justify-between lg:px-4">
+        <div className="flex flex-col md:items-center gap-3 border-b-1 py-4 md:flex-row md:justify-between lg:px-4">
             <div className="flex min-w-0 items-center gap-3 md:gap-5">
                 <div
                     className="shrink-0 cursor-pointer"
@@ -34,18 +36,33 @@ export default function CartItem({
                     {check ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
                 </div>
 
-                <Image
-                    src={imageUrl}
-                    width={100}
-                    height={100}
-                    alt={productName}
-                    className="h-auto w-20 shrink-0 object-contain md:mr-2 md:w-30"
-                />
+                {imageUrl ? (
+                    <Image
+                        src={imageUrl}
+                        width={100}
+                        height={100}
+                        alt={productName}
+                        className="h-auto w-20 shrink-0 object-contain md:mr-2 md:w-30"
+                    />
+                ) : (
+                    // 상품 이미지 테이블이 생기기 전까지 빈 자리 표시 (ProductCard와 동일)
+                    <div className="aspect-square w-20 shrink-0 bg-gray-100 md:mr-2 md:w-30" />
+                )}
                 <div className="min-w-0">
                     <div className="line-clamp-2 break-words">
                         {productName}
                     </div>
-                    <div>{(price * quantity).toLocaleString()}원</div>
+                    {optionName && (
+                        <div className="text-sm text-gray-500">
+                            옵션: {optionName}
+                        </div>
+                    )}
+                    <div>
+                        {(
+                            getUnitPrice({ price, optionPrice }) * quantity
+                        ).toLocaleString()}
+                        원
+                    </div>
                 </div>
             </div>
             <div className="flex items-center justify-between md:justify-end">

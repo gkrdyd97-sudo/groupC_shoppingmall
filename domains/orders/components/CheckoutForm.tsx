@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -10,8 +10,9 @@ import {
 } from '@tosspayments/tosspayments-sdk';
 import { Button } from '@/shared/components/ui/button';
 import { formatPrice } from '@/shared/utils/formatPrice';
-import { useCartStore } from '@/domains/cart/store/cart.store';
 import { SHIPPING_FEE } from '@/domains/cart/constants/cart.constants';
+import { type Cart } from '@/domains/cart/types/Cart.types';
+import { getProductTotal, getUnitPrice } from '@/domains/cart/util/cartPrice';
 import { createOrder } from '../actions/order.actions';
 import { validateShipping } from '../util/orderValidation';
 import ShippingForm, {
@@ -21,18 +22,14 @@ import ShippingForm, {
 
 const CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY ?? '';
 
-export default function CheckoutForm() {
-    const items = useCartStore((s) => s.items);
-    const checkedItems = useMemo(
-        () => items.filter((item) => item.check),
-        [items],
-    );
-    const hasItems = checkedItems.length > 0;
+interface CheckoutFormProps {
+    // 장바구니에서 선택해 넘어온 상품 (서버에서 DB 조회)
+    items: Cart[];
+}
 
-    const productPrice = checkedItems.reduce(
-        (acc, item) => acc + item.price * item.quantity,
-        0,
-    );
+export default function CheckoutForm({ items }: CheckoutFormProps) {
+    const hasItems = items.length > 0;
+    const productPrice = getProductTotal(items);
     const amount = productPrice + (hasItems ? SHIPPING_FEE : 0);
 
     const [widgets, setWidgets] = useState<TossPaymentsWidgets | null>(null);
@@ -105,16 +102,9 @@ export default function CheckoutForm() {
         }
 
         startTransition(async () => {
-            // 서버에서 주문 저장(결제대기) + 결제 금액 계산
+            // 서버에서 주문 저장(결제대기) + DB 가격으로 결제 금액 계산
             const result = await createOrder(
-                checkedItems.map((item) => ({
-                    productId: String(item.productId),
-                    optionId: item.optionId,
-                    productName: item.productName,
-                    price: item.price,
-                    optionPrice: item.optionPrice,
-                    quantity: item.quantity,
-                })),
+                items.map((item) => item.id),
                 shippingInput,
             );
             if (!result.success || !result.data) {
@@ -166,14 +156,14 @@ export default function CheckoutForm() {
             <div className="min-w-0 grow lg:border-r-1 lg:pr-4">
                 <section>
                     <h2 className="border-b-1 pb-4 text-xl font-bold">
-                        주문 상품 ({checkedItems.length})
+                        주문 상품 ({items.length})
                     </h2>
-                    {checkedItems.map((item) => (
+                    {items.map((item) => (
                         <div
                             key={item.id}
                             className="flex items-center gap-3 border-b-1 py-4 md:gap-5"
                         >
-                            {item.imageUrl && (
+                            {item.imageUrl ? (
                                 <Image
                                     src={item.imageUrl}
                                     width={100}
@@ -181,6 +171,8 @@ export default function CheckoutForm() {
                                     alt={item.productName}
                                     className="h-auto w-16 shrink-0 object-contain md:w-20"
                                 />
+                            ) : (
+                                <div className="aspect-square w-16 shrink-0 bg-gray-100 md:w-20" />
                             )}
                             <div className="min-w-0 grow">
                                 <div className="line-clamp-2 break-words">
@@ -188,7 +180,7 @@ export default function CheckoutForm() {
                                 </div>
                                 {item.optionName && (
                                     <div className="text-sm text-gray-500">
-                                        {item.optionName}
+                                        옵션: {item.optionName}
                                     </div>
                                 )}
                                 <div className="text-sm text-gray-500">
@@ -196,7 +188,9 @@ export default function CheckoutForm() {
                                 </div>
                             </div>
                             <div className="shrink-0 font-bold">
-                                {formatPrice(item.price * item.quantity)}
+                                {formatPrice(
+                                    getUnitPrice(item) * item.quantity,
+                                )}
                             </div>
                         </div>
                     ))}

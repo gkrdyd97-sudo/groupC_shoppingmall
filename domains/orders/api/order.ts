@@ -23,7 +23,7 @@ export async function getMyOrder(
 
     const { data, error } = await supabase
         .from('ORDERS')
-        .select('*, ORDER_ITEMS(*)')
+        .select('*, ORDER_ITEMS(*, PRODUCT_OPTIONS(item_name))')
         .eq('id', orderId)
         .eq('user_id', user.id)
         .maybeSingle();
@@ -33,6 +33,28 @@ export async function getMyOrder(
         return null;
     }
     return data as OrderWithItems | null;
+}
+
+// 결제 완료된 주문의 상품(같은 상품·옵션)을 장바구니에서 삭제
+export async function removeOrderedCartItems(
+    order: OrderWithItems,
+): Promise<void> {
+    const supabase = createServerClient();
+    await Promise.all(
+        order.ORDER_ITEMS.map(async (item) => {
+            if (!item.product_id) return;
+            let query = supabase
+                .from('CART')
+                .delete()
+                .eq('user_id', order.user_id)
+                .eq('product_id', item.product_id);
+            query = item.option_id
+                ? query.eq('option_id', item.option_id)
+                : query.is('option_id', null);
+            const { error } = await query;
+            if (error) console.error(error);
+        }),
+    );
 }
 
 export async function updateOrderStatus(
