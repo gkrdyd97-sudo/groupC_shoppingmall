@@ -134,6 +134,7 @@ export async function deleteCart(ids: string[]): Promise<ActionState> {
         .delete()
         .in('id', ids)
         .eq('user_id', user.id);
+        
     if (error) {
         return {
             success: false,

@@ -1,0 +1,284 @@
+[33mcommit 568e94275e62fa74fc19c13637c4ea589c7cb7f3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/home[m[33m)[m
+Merge: 0a0d736 a7e3bed
+Author: 766min <pq2476@gmail.com>
+Date:   Tue Oct 20 18:28:12 2026 +0900
+
+    feat:회원 버튾 활성화
+
+[33mcommit 0a0d7369bd26104f126e67fa2608a864a771b7af[m
+Author: 766min <pq2476@gmail.com>
+Date:   Tue Oct 20 18:22:01 2026 +0900
+
+    feat:마이페이지
+
+[33mcommit a7e3beda9707d1b061277db6cf3f12b585e947b1[m[33m ([m[1;31morigin/dev[m[33m)[m
+Merge: 020ba94 a616e54
+Author: 766min <pq2476@gmail.com>
+Date:   Tue Oct 20 18:21:30 2026 +0900
+
+    Merge pull request #21 from gkrdyd97-sudo/feature/login
+    
+    .
+
+[33mcommit a616e5452fba48a7d283f72c3de9e6394f72ddda[m[33m ([m[1;31morigin/feature/login[m[33m)[m
+Author: gkrdyd97-sudo <gkrdyd97@gmail.com>
+Date:   Tue Oct 20 18:19:12 2026 +0900
+
+    .
+
+[33mcommit 6501ec1fca7c110e6ed4b338897afc616e9567d3[m
+Author: 766min <pq2476@gmail.com>
+Date:   Tue Oct 20 18:04:05 2026 +0900
+
+    feat:회원 버튾 활성화
+
+[33mcommit 61cf5c902ca496f2ec79b71544975f5f61ada897[m
+Author: 766min <pq2476@gmail.com>
+Date:   Tue Oct 20 17:46:31 2026 +0900
+
+    로그인상태버튼
+
+[33mcommit 020ba941adbb48d57e0f8de78a0ea82dd026ecaa[m
+Merge: f05d75e ec2de09
+Author: 정학용 <gkrdyd97@gmail.com>
+Date:   Tue Oct 20 17:45:45 2026 +0900
+
+    Merge pull request #20 from gkrdyd97-sudo/feature/payment
+    
+    .
+
+[33mcommit ec2de09b68c51f7faf2605a82bb3eaf502704ce9[m[33m ([m[1;31morigin/feature/payment[m[33m)[m
+Author: kimtaeyang88 <chaosprada@gmail.com>
+Date:   Tue Oct 20 17:43:13 2026 +0900
+
+    .
+
+[33mcommit f05d75ef1b43853ca009741d4866b648217b03fd[m
+Merge: 4efc847 71ca69c
+Author: 정학용 <gkrdyd97@gmail.com>
+Date:   Fri Oct 16 14:15:20 2026 +0900
+
+    Merge pull request #19 from gkrdyd97-sudo/feature/home
+    
+    feat:드롭다운 기능추가
+
+[33mcommit 71ca69c578a6c3af38a6495a3dfd082edc4244b5[m[33m ([m[1;31morigin/feature/home[m[33m)[m
+Author: 766min <pq2476@gmail.com>
+Date:   Fri Oct 16 14:13:18 2026 +0900
+
+    feat:드롭다운 기능추가
+
+[33mcommit 4efc8470152df2a95ce83d46a4ced8a9f4a92d88[m
+Merge: 6b1e9f3 2830c2d
+Author: acdc234-git <whdcks1987@gmail.com>
+Date:   Fri Oct 16 11:10:40 2026 +0900
+
+    Merge pull request #18 from gkrdyd97-sudo/feature/payment
+    
+    .
+
+[33mcommit 2830c2d47a41bccef0423750d26a127dcd6ade05[m
+Author: kimtaeyang88 <chaosprada@gmail.com>
+Date:   Fri Oct 16 11:09:36 2026 +0900
+
+    .
+
+[33mcommit 6b1e9f3d267040b9721e3db70591d81115b020a9[m
+Merge: b674731 757ea16
+Author: 정학용 <gkrdyd97@gmail.com>
+Date:   Fri Oct 16 11:07:22 2026 +0900
+
+    Merge pull request #17 from gkrdyd97-sudo/feature/product
+    
+    상세 페이지 버튼 구현
+
+[33mcommit 757ea16afd01ad697aab0cc314e857c560aef616[m
+Author: SJC <whdcks1987@gmail.com>
+Date:   Fri Oct 16 10:58:30 2026 +0900
+
+    상세 페이지 버튼 구현
+
+[33mcommit b674731f860245e1ab73b83e4258e23c789f1047[m
+Merge: 53543c7 28002aa
+Author: acdc234-git <whdcks1987@gmail.com>
+Date:   Fri Oct 16 10:30:21 2026 +0900
+
+    Merge pull request #16 from gkrdyd97-sudo/feature/login
+    
+    fill password
+
+[33mcommit 28002aa4112b40d1735ff338632fb3eda8bc5a93[m
+Author: gkrdyd97-sudo <gkrdyd97@gmail.com>
+Date:   Fri Oct 16 10:27:43 2026 +0900
+
+    fill password
+
+[33mcommit 53543c7387707066314fa1f895882fd38e21df3a[m
+Merge: f0cda1d 795477e
+Author: 766min <pq2476@gmail.com>
+Date:   Fri Oct 16 10:20:50 2026 +0900
+
+    Merge pull request #14 from gkrdyd97-sudo/feature/product
+    
+    이미지 추가 및 페이지 수정
+
+[33mcommit f0cda1d0af9f5ba8c11afafca02ced9b69b6f5b6[m
+Merge: 8855de0 732388d
+Author: acdc234-git <whdcks1987@gmail.com>
+Date:   Fri Oct 16 10:19:46 2026 +0900
+
+    Merge pull request #15 from gkrdyd97-sudo/feature/home
+    
+    feat:메인 스와이퍼구성
+
+[33mcommit 732388d50fdf3b9a8c431d5c2c4e6f26ac0992da[m
+Author: 766min <pq2476@gmail.com>
+Date:   Fri Oct 16 10:17:30 2026 +0900
+
+    feat:메인 스와이퍼구성
+
+[33mcommit 795477e661b047245abf5023ad51a5c7a2b1c771[m
+Author: SJC <whdcks1987@gmail.com>
+Date:   Fri Oct 16 09:56:41 2026 +0900
+
+    이미지 추가 및 페이지 수정
+
+[33mcommit 8855de0a12eb3874eb2263759e0d3a46ff5393ed[m
+Merge: d0c74c4 f0b2a0e
+Author: acdc234-git <whdcks1987@gmail.com>
+Date:   Fri Oct 16 09:51:21 2026 +0900
+
+    Merge pull request #13 from gkrdyd97-sudo/feature/payment
+    
+    feat:  장바구니 CSS 조정 및 선택 상품 삭제 구현
+
+[33mcommit f0b2a0eedd906b7d8031b440dcace68bf55e2867[m
+Author: kimtaeyang88 <chaosprada@gmail.com>
+Date:   Fri Oct 16 09:49:23 2026 +0900
+
+    feat:  장바구니 CSS 조정 및 선택 상품 삭제 구현
+
+[33mcommit d0c74c43689585615754970cc8c896f5fef315ac[m
+Merge: 652cac3 8cad894
+Author: 정학용 <gkrdyd97@gmail.com>
+Date:   Thu Oct 15 18:14:47 2026 +0900
+
+    Merge pull request #12 from gkrdyd97-sudo/feature/payment
+    
+    .
+
+[33mcommit 8cad8941ebbf63c1ad05804910c61ae1e022d3fc[m
+Author: kimtaeyang88 <chaosprada@gmail.com>
+Date:   Thu Oct 15 18:04:45 2026 +0900
+
+    .
+
+[33mcommit 652cac39b24690e193f614b993b157db016cfb5b[m
+Merge: eb9d900 0f4c9de
+Author: acdc234-git <whdcks1987@gmail.com>
+Date:   Thu Oct 15 17:52:17 2026 +0900
+
+    Merge pull request #11 from gkrdyd97-sudo/feature/login
+    
+    password
+
+[33mcommit eb9d900f70b32233e0827b93fe3e5e8681965470[m
+Merge: 523ef47 7571ffc
+Author: 정학용 <gkrdyd97@gmail.com>
+Date:   Thu Oct 15 17:50:37 2026 +0900
+
+    Merge pull request #10 from gkrdyd97-sudo/feature/product
+    
+    상세 페이지 표시 추가
+
+[33mcommit 0f4c9defd2306158e484f2651fcb577e751c1019[m
+Author: gkrdyd97-sudo <gkrdyd97@gmail.com>
+Date:   Thu Oct 15 17:48:08 2026 +0900
+
+    password
+
+[33mcommit 7571ffc60e865495f2ace62f164f3da3c7a1aa08[m
+Author: SJC <whdcks1987@gmail.com>
+Date:   Thu Oct 15 17:36:02 2026 +0900
+
+    상세 페이지 표시 추가
+
+[33mcommit 523ef4726002b5d51d9dd67e1c97448d02626a19[m
+Merge: 68bc641 68bf58c
+Author: acdc234-git <whdcks1987@gmail.com>
+Date:   Thu Oct 15 17:32:17 2026 +0900
+
+    Merge pull request #9 from gkrdyd97-sudo/feature/login
+    
+    checkbox/qna/notice
+
+[33mcommit 68bf58c35795a512c18190d73255f93813c51efd[m
+Merge: f34ea09 68bc641
+Author: 정학용 <gkrdyd97@gmail.com>
+Date:   Thu Oct 15 17:21:40 2026 +0900
+
+    Merge branch 'dev' into feature/login
+
+[33mcommit f34ea09ecc6266ede0a71c2dd0aa38a1b658d266[m
+Author: gkrdyd97-sudo <gkrdyd97@gmail.com>
+Date:   Thu Oct 15 17:17:36 2026 +0900
+
+    checkbox/qna/notice
+
+[33mcommit 68bc641d74dc6d13ea18c8ade3a7b1241b43e43d[m
+Merge: d68ad74 aeee229
+Author: 766min <pq2476@gmail.com>
+Date:   Thu Oct 15 17:09:17 2026 +0900
+
+    Merge pull request #8 from gkrdyd97-sudo/feature/product
+    
+    Feature/product
+
+[33mcommit d68ad74f5268acf2743c6e06b01b700630634c5f[m
+Merge: 26e9683 d9ccff5
+Author: acdc234-git <whdcks1987@gmail.com>
+Date:   Thu Oct 15 17:08:22 2026 +0900
+
+    Merge pull request #7 from gkrdyd97-sudo/feature/home
+    
+    feat:메인배너영상
+
+[33mcommit d9ccff5f005f2480b81eed6835abec654ce2b43c[m
+Author: 766min <pq2476@gmail.com>
+Date:   Thu Oct 15 17:02:39 2026 +0900
+
+    feat:메인배너영상
+
+[33mcommit aeee22970d79631eb5062cc88c095481cfb2e982[m[33m ([m[1;31morigin/product[m[33m)[m
+Author: SJC <whdcks1987@gmail.com>
+Date:   Thu Oct 15 15:21:42 2026 +0900
+
+    이미지 폴더 추가
+
+[33mcommit bc1d3b07a5b020de0b0e97da46c16263b5300efb[m[33m ([m[1;31morigin/teaching2[m[33m)[m
+Author: SJC <whdcks1987@gmail.com>
+Date:   Thu Oct 15 11:56:48 2026 +0900
+
+    .
+
+[33mcommit 26e96832e07e4988ff734c302eb7a6b94091034d[m
+Merge: 93984c7 f338855
+Author: 정학용 <gkrdyd97@gmail.com>
+Date:   Thu Oct 15 10:14:33 2026 +0900
+
+    Merge pull request #4 from gkrdyd97-sudo/feature/product
+    
+    feat: 상품 목록/상세 페이지 및 컴포넌트 구현
+
+[33mcommit 93984c7e7bb22eb4fbcb4fb135850f996e9d9ce2[m
+Merge: bfed14d a37e8fe
+Author: 정학용 <gkrdyd97@gmail.com>
+Date:   Thu Oct 15 10:13:34 2026 +0900
+
+    Merge pull request #5 from gkrdyd97-sudo/feature/home
+    
+    feat:메인페이지 구성
+
+[33mcommit bfed14dd3db4cfb67bdaf21b29aa5e0373ae93dc[m
+Merge: 76e50d9 66c23b3
+Author: acdc234-git <whdcks1987@gmai
