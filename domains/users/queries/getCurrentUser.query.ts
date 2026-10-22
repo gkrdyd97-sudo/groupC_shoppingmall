@@ -33,6 +33,7 @@ export const getCurrentUser = cache(async (): Promise<UserType> => {
         email: authUser.email,
         userType: profile.user_type ?? 'USER',
         phone: profile.phone,
+        gender: profile.gender ?? undefined, // 회원정보 수정 폼 초기값용
         privateAgree: profile.private_agree,
         tradeAgree: profile.trade_agree,
         createdAt: profile.created_at,
