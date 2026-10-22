@@ -6,7 +6,11 @@ import { createServerClient } from '@/shared/lib/supabase';
 import type { ActionState } from '@/shared/types/action.types';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { getSafeRedirectPath, validateLogin } from '../utils/authValidation';
+import {
+    getLoginRedirectPath,
+    getSafeRedirectPath,
+    validateLogin,
+} from '../utils/authValidation';
 
 export async function loginAction(
     _prevState: ActionState<{ email: string }>,
@@ -28,12 +32,15 @@ export async function loginAction(
 
     // 2) Supabase Auth 로그인 (서버 클라이언트라 세션이 쿠키에 저장됨)
     const supabase = createServerClient();
-    const { error } = await supabase.auth.signInWithPassword({
+    const {
+        data: { user },
+        error,
+    } = await supabase.auth.signInWithPassword({
         email,
         password,
     });
 
-    if (error) {
+    if (error || !user) {
         // 계정 존재 여부를 노출하지 않도록 같은 문구로 안내
         return {
             success: false,
@@ -42,8 +49,15 @@ export async function loginAction(
         };
     }
 
-    // 3) 헤더의 로그인 상태(AuthStatus)가 바로 바뀌도록 전체 레이아웃 갱신 후 이동
+    // 3) 회원 유형 조회 → 관리자(ADMIN)면 관리자 페이지로 보내기 위함
+    const { data: profile } = await supabase
+        .from('PROFILES')
+        .select('user_type')
+        .eq('id', user.id)
+        .maybeSingle();
+
+    // 4) 헤더의 로그인 상태(AuthStatus)가 바로 바뀌도록 전체 레이아웃 갱신 후 이동
     // redirect 는 내부적으로 예외를 던지므로 try/catch 밖에서 호출해야 함
     revalidatePath('/', 'layout');
-    redirect(redirectPath);
+    redirect(getLoginRedirectPath(profile?.user_type, redirectPath));
 }

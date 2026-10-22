@@ -1,4 +1,5 @@
 // 게시글 작성 페이지 (/boards/qna/new)
+import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import PostForm from '@/domains/boards/components/PostForm';
@@ -10,6 +11,8 @@ import { getCurrentUser } from '@/domains/users/queries/getCurrentUser.query';
 type Params = Promise<{ boardId: string }>;
 
 async function NewPostContent({ params }: { params: Params }) {
+    // Supabase 가 내부에서 현재 시각(Date.now)을 사용하므로, 요청이 들어온 뒤에 실행되도록 표시
+    await connection();
     const { boardId } = await params;
     if (!isBoardId(boardId)) notFound();
 

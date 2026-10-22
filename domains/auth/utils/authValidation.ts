@@ -144,3 +144,20 @@ export function getSafeRedirectPath(
     }
     return redirectUrl;
 }
+
+// 로그인 성공 후 최종 이동 경로 결정
+// - 관리자(ADMIN): 관리자 페이지(/admin)로 이동
+//   단, 원래 가려던 곳이 관리자 하위 페이지(/admin/products 등)면 그곳으로 이동
+// - 일반 회원: 원래 가려던 페이지 (없으면 메인)
+// safeRedirectPath 는 getSafeRedirectPath() 를 거친 값이어야 함
+export function getLoginRedirectPath(
+    userType: string | null | undefined,
+    safeRedirectPath: string,
+): string {
+    if (userType === 'ADMIN') {
+        return safeRedirectPath.startsWith('/admin')
+            ? safeRedirectPath
+            : '/admin';
+    }
+    return safeRedirectPath;
+}

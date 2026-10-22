@@ -156,8 +156,9 @@ export async function updatePostAction(
     redirect(`/boards/${boardId}/${postId}`);
 }
 
-// 게시글 삭제 (소프트 삭제: deleted_at 에 시각을 기록, 목록/상세 조회에서 제외됨)
-export async function deletePostAction(
+// 게시글 삭제 공통 처리 (소프트 삭제: deleted_at 에 시각을 기록, 목록/상세 조회에서 제외됨)
+// export 하지 않은 내부 함수라 클라이언트에서 직접 호출할 수 없음
+async function softDeletePost(
     boardId: string,
     postId: number,
 ): Promise<ActionState> {
@@ -175,6 +176,7 @@ export async function deletePostAction(
             message: '이미 삭제되었거나 존재하지 않는 게시글입니다.',
         };
     }
+    // 작성자 본인 또는 관리자만 삭제 가능
     if (!canManagePost(post, user)) {
         return { success: false, message: '삭제 권한이 없습니다.' };
     }
@@ -194,5 +196,24 @@ export async function deletePostAction(
     }
 
     revalidatePath(`/boards/${boardId}`);
+    revalidatePath('/admin/board');
+    return { success: true };
+}
+
+// 게시글 상세 페이지의 삭제 버튼 → 삭제 후 게시판 목록으로 이동
+export async function deletePostAction(
+    boardId: string,
+    postId: number,
+): Promise<ActionState> {
+    const result = await softDeletePost(boardId, postId);
+    if (!result.success) return result;
     redirect(`/boards/${boardId}`);
+}
+
+// 관리자 게시판 관리 화면의 삭제 버튼 → 이동 없이 목록만 갱신
+export async function adminDeletePostAction(
+    boardId: string,
+    postId: number,
+): Promise<ActionState> {
+    return softDeletePost(boardId, postId);
 }

@@ -1,5 +1,6 @@
 export const instant = false;
 
+import { connection } from 'next/server';
 import { getCurrentUser } from '@/domains/users/queries/getCurrentUser.query';
 import AdminSidebar from '@/domains/admin/components/AdminSidebar';
 import { redirect } from 'next/navigation';
@@ -10,6 +11,8 @@ export default async function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
+    // Supabase 가 내부에서 현재 시각(Date.now)을 사용하므로, 요청이 들어온 뒤에 실행되도록 표시
+    await connection();
     const user = await getCurrentUser();
     const isAdmin = Boolean(user?.userType === 'ADMIN');
 

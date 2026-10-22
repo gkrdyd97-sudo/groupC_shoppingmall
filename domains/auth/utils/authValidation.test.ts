@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
     formatPhone,
+    getLoginRedirectPath,
     getSafeRedirectPath,
     validateLogin,
     validateProfile,
@@ -144,5 +145,24 @@ describe('getSafeRedirectPath 함수 테스트', () => {
         assert.strictEqual(getSafeRedirectPath('https://evil.com'), '/');
         assert.strictEqual(getSafeRedirectPath('//evil.com'), '/');
         assert.strictEqual(getSafeRedirectPath('/\\evil.com'), '/');
+    });
+});
+
+describe('getLoginRedirectPath 함수 테스트', () => {
+    it('관리자는 관리자 페이지로 이동한다', () => {
+        assert.strictEqual(getLoginRedirectPath('ADMIN', '/'), '/admin');
+        assert.strictEqual(getLoginRedirectPath('ADMIN', '/mypage'), '/admin');
+    });
+
+    it('관리자가 관리자 하위 페이지를 가려던 중이면 그곳으로 이동한다', () => {
+        assert.strictEqual(
+            getLoginRedirectPath('ADMIN', '/admin/products'),
+            '/admin/products',
+        );
+    });
+
+    it('일반 회원·프로필 없음은 원래 경로로 이동한다', () => {
+        assert.strictEqual(getLoginRedirectPath('USER', '/mypage'), '/mypage');
+        assert.strictEqual(getLoginRedirectPath(undefined, '/'), '/');
     });
 });

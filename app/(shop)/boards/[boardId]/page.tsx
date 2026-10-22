@@ -1,5 +1,6 @@
 // 게시판 목록 페이지 (/boards/notice, /boards/qna)
 // 쿼리: ?page=2&field=title&q=배송
+import { connection } from 'next/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
@@ -27,6 +28,8 @@ async function BoardContent({
     params: Params;
     searchParams: SearchParams;
 }) {
+    // Supabase 가 내부에서 현재 시각(Date.now)을 사용하므로, 요청이 들어온 뒤에 실행되도록 표시
+    await connection();
     const { boardId } = await params;
     // notice, qna 외의 게시판 주소는 404
     if (!isBoardId(boardId)) notFound();

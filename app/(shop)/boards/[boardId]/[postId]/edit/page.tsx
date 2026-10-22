@@ -1,4 +1,5 @@
 // 게시글 수정 페이지 (/boards/qna/12/edit)
+import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import PostForm from '@/domains/boards/components/PostForm';
@@ -11,6 +12,8 @@ import { getCurrentUser } from '@/domains/users/queries/getCurrentUser.query';
 type Params = Promise<{ boardId: string; postId: string }>;
 
 async function EditPostContent({ params }: { params: Params }) {
+    // Supabase 가 내부에서 현재 시각(Date.now)을 사용하므로, 요청이 들어온 뒤에 실행되도록 표시
+    await connection();
     const { boardId, postId } = await params;
     const id = Number(postId);
     if (!isBoardId(boardId) || !Number.isInteger(id)) notFound();
