@@ -1,6 +1,6 @@
 'use client';
 
-// import Link from 'next/link';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FiUser, FiPackage, FiLogOut } from 'react-icons/fi';
 // import { useAuthStore } from '@/shared/store/useAuthStore';
@@ -45,6 +45,13 @@ export default function MyPage() {
                     {/* <p className="text-lg font-bold">{user.id} 님</p>
                     <p className="text-sm text-gray-500">RNDO 회원</p> */}
                 </div>
+                {/* 회원정보 수정 페이지로 이동 */}
+                <Link
+                    href="/mypage/edit"
+                    className="ml-auto rounded-sm border px-4 py-2 text-sm hover:bg-gray-50"
+                >
+                    회원정보 수정
+                </Link>
             </section>
 
             <section className="mb-8">

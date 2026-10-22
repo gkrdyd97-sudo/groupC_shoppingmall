@@ -1,71 +1,77 @@
 'use client';
-
+// 로그인 폼
+// - useActionState 로 Server Action(loginAction) 과 연결
+// - noValidate 로 브라우저 기본 말풍선을 끄고, 서버 검증 결과(state.errors)를 인라인으로 표시
 import Link from 'next/link';
-import { useState, type FormEvent } from 'react';
+import { useActionState } from 'react';
+import type { ActionState } from '@/shared/types/action.types';
+import { loginAction } from '../actions/login.action';
+import FieldError from './FieldError';
 
-import { signIn } from '@/domains/auth/api/auth';
+const INITIAL_STATE: ActionState<{ email: string }> = { success: false };
 
-export default function LoginForm() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+interface LoginFormProps {
+    // 미들웨어가 붙여준 로그인 후 이동 경로 (예: /mypage)
+    redirectUrl?: string;
+}
 
-    const [errorMessage, setErrorMessage] = useState('');
-
-    const [isLoading, setIsLoading] = useState(false);
-
-    const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        setErrorMessage('');
-        setIsLoading(true);
-
-        const result = await signIn({
-            email,
-            password,
-        });
-
-        setIsLoading(false);
-
-        if (!result.success) {
-            setErrorMessage(result.message ?? '로그인에 실패했습니다.');
-            return;
-        }
-
-        window.location.href = '/';
-    };
+export default function LoginForm({ redirectUrl }: LoginFormProps) {
+    // state: 서버 액션이 돌려준 결과, formAction: <form action> 에 넣을 함수
+    // isPending: 서버 액션 처리 중 여부 (버튼 비활성화에 사용)
+    const [state, formAction, isPending] = useActionState(
+        loginAction,
+        INITIAL_STATE,
+    );
 
     return (
         <div className="auth-form">
-            <form className="auth-form-content" onSubmit={onSubmit}>
+            <form action={formAction} noValidate className="auth-form-content">
+                {/* 로그인 성공 후 돌아갈 경로를 서버 액션에 함께 전달 */}
+                <input
+                    type="hidden"
+                    name="redirectUrl"
+                    value={redirectUrl ?? ''}
+                />
+
+                {/* 검증 실패 후에도 입력했던 이메일이 남도록 defaultValue 로 복원 */}
                 <input
                     className="auth-input"
                     type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
+                    name="email"
+                    defaultValue={state.data?.email ?? ''}
                     placeholder="이메일"
-                    required
+                    autoComplete="email"
+                    aria-invalid={Boolean(state.errors?.email)}
                 />
+                <FieldError message={state.errors?.email} />
 
                 <input
                     className="auth-input"
                     type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
+                    name="password"
                     placeholder="비밀번호"
-                    required
+                    autoComplete="current-password"
+                    aria-invalid={Boolean(state.errors?.password)}
                 />
+                <FieldError message={state.errors?.password} />
 
-                {errorMessage && <p className="auth-error">{errorMessage}</p>}
+                {/* 아이디/비밀번호 불일치 등 폼 전체 에러 */}
+                {state.message && (
+                    <p className="text-center text-sm text-red-500">
+                        {state.message}
+                    </p>
+                )}
 
                 <button
                     className="auth-button black-button"
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isPending}
                 >
-                    {isLoading ? '로그인 중...' : '로그인'}
+                    {isPending ? '로그인 중...' : '로그인'}
                 </button>
             </form>
 
+            {/* 소셜 로그인은 아직 미구현 (UI 자리만 유지) */}
             <button className="auth-button kakao-button" type="button">
                 카카오로 시작하기
             </button>
@@ -80,9 +86,7 @@ export default function LoginForm() {
 
             <div className="find-links">
                 <Link href="/find-id">아이디 찾기</Link>
-
                 <span>|</span>
-
                 <Link href="/find-password">비밀번호 찾기</Link>
             </div>
         </div>

@@ -2,7 +2,7 @@ import { type Category } from '@/domains/categories/types/category.types';
 
 function collectIds(category: Category): string[] {
     const childIds = (category.children ?? []).flatMap(collectIds);
-    return [category.id, ...childIds];
+    return [category.id!, ...childIds];
 }
 
 export function getCategoryIds(

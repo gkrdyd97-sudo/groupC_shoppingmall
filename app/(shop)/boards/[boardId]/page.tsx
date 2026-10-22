@@ -1,169 +1,91 @@
+// 게시판 목록 페이지 (/boards/notice, /boards/qna)
+// 쿼리: ?page=2&field=title&q=배송
+import { connection } from 'next/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-
+import { Suspense } from 'react';
+import Pagination from '@/domains/boards/components/Pagination';
 import PostList from '@/domains/boards/components/PostList';
-import type {
-    BoardId,
-    Post,
-} from '@/domains/boards/types/post.types';
+import PostSearch from '@/domains/boards/components/PostSearch';
+import {
+    BOARD_INFO,
+    POSTS_PER_PAGE,
+} from '@/domains/boards/constants/board.constants';
+import { getPosts } from '@/domains/boards/queries/getPosts.query';
+import type { PostSearchField } from '@/domains/boards/types/post.types';
+import { canWritePost } from '@/domains/boards/utils/boardPermission';
+import { isBoardId, parsePage } from '@/domains/boards/utils/postValidation';
+import { getCurrentUser } from '@/domains/users/queries/getCurrentUser.query';
 
-interface PageProps {
-    params: Promise<{
-        boardId: string;
-    }>;
-}
+type Params = Promise<{ boardId: string }>;
+type SearchParams = Promise<{ page?: string; field?: string; q?: string }>;
 
-const boardInfo: Record<
-    BoardId,
-    {
-        title: string;
-        description: string;
-    }
-> = {
-    qna: {
-        title: '고객 Q&A',
-        description:
-            '상품과 주문에 대해 궁금한 점을 남겨주세요.',
-    },
-    notice: {
-        title: '공지사항',
-        description:
-            'RNDO 쇼핑몰의 새로운 소식을 알려드립니다.',
-    },
-};
-
-const postsByBoard: Record<BoardId, Post[]> = {
-    qna: [
-        {
-            id: 3,
-            title: '배송 관련 문의드립니다.',
-            contents:
-                '배송이 언제 시작되나요?',
-            author: '김태양',
-            createdAt: '2026.10.15',
-            views: 12,
-            status: '답변대기',
-        },
-        {
-            id: 2,
-            title: '사이즈 문의드립니다.',
-            contents:
-                '사이즈가 어떻게 되나요?',
-            author: '김민지',
-            createdAt: '2026.10.14',
-            views: 8,
-            status: '답변완료',
-        },
-        {
-            id: 1,
-            title: '상품 교환 문의입니다.',
-            contents:
-                '상품을 교환하고 싶습니다.',
-            author: '서종찬',
-            createdAt: '2026.10.13',
-            views: 15,
-            status: '답변완료',
-        },
-    ],
-
-    notice: [
-        {
-            id: 3,
-            title: 'RNDO 쇼핑몰 이용 안내',
-            contents:
-                'RNDO 쇼핑몰을 이용하시기 전에 확인해주세요.',
-            author: 'RNDO',
-            createdAt: '2026.10.15',
-            views: 42,
-        },
-        {
-            id: 2,
-            title: '배송 및 교환 정책 안내',
-            contents:
-                '배송 및 교환에 관한 정책을 안내드립니다.',
-            author: 'RNDO',
-            createdAt: '2026.10.14',
-            views: 31,
-        },
-        {
-            id: 1,
-            title: 'RNDO 공식 오픈 안내',
-            contents:
-                'RNDO가 공식적으로 오픈되었습니다.',
-            author: 'RNDO',
-            createdAt: '2026.10.13',
-            views: 56,
-        },
-    ],
-};
-
-export default async function BoardPage({
+// params/searchParams/로그인 쿠키는 요청마다 달라서 Suspense 안에서 읽는다 (cacheComponents 규칙)
+async function BoardContent({
     params,
-}: PageProps): Promise<React.JSX.Element> {
+    searchParams,
+}: {
+    params: Params;
+    searchParams: SearchParams;
+}) {
+    // Supabase 가 내부에서 현재 시각(Date.now)을 사용하므로, 요청이 들어온 뒤에 실행되도록 표시
+    await connection();
     const { boardId } = await params;
+    // notice, qna 외의 게시판 주소는 404
+    if (!isBoardId(boardId)) notFound();
 
-    if (
-        boardId !== 'qna' &&
-        boardId !== 'notice'
-    ) {
-        notFound();
-    }
+    const query = await searchParams;
+    const page = parsePage(query.page);
+    const field: PostSearchField =
+        query.field === 'content' ? 'content' : 'title';
+    const keyword = query.q?.trim() ?? '';
 
-    const board = boardInfo[boardId];
-    const posts = postsByBoard[boardId];
+    // 게시글 목록과 로그인 사용자(글쓰기 버튼 노출용)를 동시에 조회
+    const [{ posts, totalCount }, user] = await Promise.all([
+        getPosts({ boardId, page, field, keyword }),
+        getCurrentUser(),
+    ]);
+
+    const board = BOARD_INFO[boardId];
+    const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
 
     return (
-        <section className="mx-auto min-h-[700px] max-w-7xl px-4 py-12 md:px-6">
+        <>
             <div className="mb-10 border-b border-gray-900 pb-6">
                 <h1 className="text-2xl font-bold text-gray-900">
                     {board.title}
                 </h1>
-
                 <p className="mt-3 text-sm text-gray-500">
                     {board.description}
                 </p>
             </div>
 
-            <div className="mb-6 flex justify-end gap-2">
-                <select className="h-9 border border-gray-300 px-3 text-sm">
-                    <option>제목</option>
-                    <option>내용</option>
-                    <option>작성자</option>
-                </select>
-
-                <input
-                    className="h-9 w-52 border border-gray-300 px-3 text-sm outline-none focus:border-gray-900"
-                    type="text"
-                    placeholder="검색어를 입력하세요"
-                />
-
-                <button
-                    className="h-9 bg-gray-900 px-5 text-sm text-white"
-                    type="button"
-                >
-                    검색
-                </button>
+            <div className="mb-6">
+                <PostSearch boardId={boardId} field={field} keyword={keyword} />
             </div>
 
             <div className="mb-3 text-sm text-gray-500">
-                총 {posts.length}개의 게시글
+                {keyword && <span>&apos;{keyword}&apos; 검색 결과 </span>}총{' '}
+                {totalCount}개의 게시글
             </div>
 
             <PostList
                 boardId={boardId}
                 posts={posts}
+                startNumber={totalCount - (page - 1) * POSTS_PER_PAGE}
             />
 
-            <div className="relative mt-8 flex justify-center">
-                <div className="flex gap-3 text-sm text-gray-500">
-                    <span className="font-semibold text-gray-900">
-                        1
-                    </span>
-                    <span>2</span>
-                    <span>3</span>
-                </div>
+            <div className="relative mt-8 flex min-h-10 justify-center">
+                <Pagination
+                    basePath={`/boards/${boardId}`}
+                    currentPage={page}
+                    totalPages={totalPages}
+                    // 검색 중일 때만 검색 조건을 페이지 링크에 유지
+                    searchParams={keyword ? { field, q: keyword } : {}}
+                />
 
-                {boardId === 'qna' && (
+                {/* 글쓰기 권한이 있을 때만 버튼 노출 (공지사항: 관리자 / Q&A: 회원) */}
+                {canWritePost(boardId, user) && (
                     <Link
                         href={`/boards/${boardId}/new`}
                         className="absolute right-0 bg-gray-900 px-5 py-2 text-sm text-white"
@@ -172,6 +94,28 @@ export default async function BoardPage({
                     </Link>
                 )}
             </div>
+        </>
+    );
+}
+
+export default function BoardPage({
+    params,
+    searchParams,
+}: {
+    params: Params;
+    searchParams: SearchParams;
+}) {
+    return (
+        <section className="mx-auto min-h-[700px] max-w-7xl px-4 py-12 md:px-6">
+            <Suspense
+                fallback={
+                    <p className="py-20 text-center text-sm text-gray-500">
+                        게시글을 불러오는 중입니다...
+                    </p>
+                }
+            >
+                <BoardContent params={params} searchParams={searchParams} />
+            </Suspense>
         </section>
     );
 }
