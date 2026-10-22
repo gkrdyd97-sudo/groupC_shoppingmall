@@ -15,8 +15,7 @@ import {
 const ADMIN_MENUS = [
     { label: '대시보드', href: '/admin', icon: FiHome },
     { label: '상품 관리', href: '/admin/products', icon: FiBox },
-    { label: '카테고리/진열 관리', href: '/admin/categories', icon: FiGrid },
-    { label: '주문 관리', href: '/admin/orders', icon: FiShoppingBag },
+    { label: '카테고리/진열 관리', href: '/admin/category', icon: FiGrid },
     { label: '게시판 관리', href: '/admin/board', icon: FiSettings },
 ];
 
@@ -30,10 +29,10 @@ export default function AdminSidebar() {
                     href="/"
                     className="text-lg font-black tracking-tight text-white hover:text-blue-400"
                 >
-                    Sparta Admin
+                    RNDO ADMIN
                 </Link>
                 <p className="text-[11px] text-gray-400">
-                    쇼핑몰 통합 백오피스
+                    RNDO 쇼핑몰 관리자 페이지입니다
                 </p>
             </div>
             <nav className="space-y-1">
