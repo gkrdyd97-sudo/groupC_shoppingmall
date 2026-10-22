@@ -1,34 +1,38 @@
-import { products } from '@/shared/mocks/products.mock';
 import ProductCard from '@/domains/products/components/ProductCard';
-import React from 'react';
+import { getProducts } from '@/domains/products/queries/getProducts.query';
 
-interface SearchParamsType {
-    query?: string;
-    page?: number;
+interface PageProps {
+    searchParams: Promise<{ category?: string }>;
 }
+
+export const instant = false;
 
 export default async function ProductList({
     searchParams,
-}: {
-    searchParams: SearchParamsType;
-}): Promise<React.JSX.Element> {
-    const { query, page } = await searchParams;
-    console.log(query, page);
+}: PageProps): Promise<React.JSX.Element> {
+    const { category } = await searchParams;
+    const products = await getProducts(category);
 
     return (
         <div className="mx-auto max-w-7xl px-4 py-8 md:px-6">
             <h1 className="mb-6 text-2xl font-bold">
-                전체 상품{' '}
+                {category ?? '전체 상품'}{' '}
                 <span className="text-sm font-normal text-gray-500">
                     총 {products.length}개
                 </span>
             </h1>
 
-            <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-                {products.map((product) => (
-                    <ProductCard key={product.id} {...product} />
-                ))}
-            </div>
+            {products.length === 0 ? (
+                <p className="py-20 text-center text-sm text-gray-500">
+                    등록된 상품이 없습니다.
+                </p>
+            ) : (
+                <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+                    {products.map((product) => (
+                        <ProductCard key={product.id} {...product} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

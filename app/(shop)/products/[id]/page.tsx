@@ -1,21 +1,25 @@
 import { notFound } from 'next/navigation';
-import { products } from '@/shared/mocks/products.mock';
 import { formatPrice } from '@/shared/utils/formatPrice';
 import ProductGallery from '@/domains/products/components/ProductGallery';
 import ProductActions from '@/domains/products/components/ProductActions';
+import { getProductById } from '@/domains/products/queries/getProductById.query';
 
 interface PageProps {
     params: Promise<{ id: string }>;
 }
+
+export const instant = false;
 
 export default async function ProductDetailPage({
     params,
 }: PageProps): Promise<React.JSX.Element> {
     const { id } = await params;
 
-    const product = products.find((p) => p.id === Number(id));
+    const product = await getProductById(id);
 
     if (!product) notFound();
+
+    const hasDiscount = product.consumerPrice > product.salePrice;
 
     return (
         <div className="mx-auto max-w-5xl px-4 py-8 md:px-6">
@@ -27,14 +31,27 @@ export default async function ProductDetailPage({
                 <div>
                     <p className="text-sm text-gray-500">{product.brand}</p>
                     <h1 className="mt-1 text-2xl font-bold">{product.name}</h1>
-                    <p className="mt-3 text-xl font-bold">
-                        {formatPrice(product.price)}
-                    </p>
+
+                    <div className="mt-3 flex items-baseline gap-2">
+                        <p className="text-xl font-bold">
+                            {formatPrice(product.salePrice)}
+                        </p>
+                        {hasDiscount && (
+                            <p className="text-sm text-gray-400 line-through">
+                                {formatPrice(product.consumerPrice)}
+                            </p>
+                        )}
+                    </div>
+
                     <p className="mt-3 text-sm text-gray-600">
-                        {product.description}
+                        {product.longDescription}
                     </p>
 
-                    <ProductActions sizes={product.sizes} />
+                    <ProductActions
+                        productId={product.id}
+                        salePrice={product.salePrice}
+                        options={product.options}
+                    />
                 </div>
             </div>
 
@@ -51,9 +68,9 @@ export default async function ProductDetailPage({
                         </tr>
                         <tr>
                             <th className="py-1 pr-8 text-left font-normal text-gray-500">
-                                원산지
+                                상품 코드
                             </th>
-                            <td className="py-1">{product.country}</td>
+                            <td className="py-1">{product.gid}</td>
                         </tr>
                     </tbody>
                 </table>
