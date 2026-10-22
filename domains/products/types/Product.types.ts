@@ -12,4 +12,15 @@ export interface Product {
     createdAt: string;
     updatedAt: string | null;
     deletedAt: string | null;
+    imageUrl: string | null;
+}
+
+export interface ProductOption {
+    id: string;
+    name: string;
+}
+
+export interface ProductDetail extends Product {
+    images: string[];
+    options: ProductOption[];
 }

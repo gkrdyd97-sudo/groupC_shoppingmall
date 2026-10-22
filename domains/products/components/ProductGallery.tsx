@@ -41,7 +41,7 @@ export default function ProductGallery({
                         type="button"
                         onClick={() => scroll('left')}
                         aria-label="이전 이미지"
-                        className="-translate-y-1-2 absolute top-1/2 left-0 z-10 rounded-full bg-white/90 px-2 py-1 text-lg shadow"
+                        className="-translate-y-1-2 absolute top-1/2 left-0 z-10 cursor-pointer rounded-full bg-white/90 px-2 py-1 text-lg shadow"
                     >
                         <MdArrowBackIosNew />
                     </button>
@@ -55,7 +55,7 @@ export default function ProductGallery({
                             key={image}
                             type="button"
                             onClick={() => setSelected(index)}
-                            className={`w-20 shrink-0 overflow-hidden border-2 ${
+                            className={`w-20 shrink-0 cursor-pointer overflow-hidden border-2 ${
                                 index === selected
                                     ? 'border-black'
                                     : 'border-transparent'
@@ -74,7 +74,7 @@ export default function ProductGallery({
                         type="button"
                         onClick={() => scroll('right')}
                         aria-label="다음 이미지"
-                        className="absolute top-1/2 right-0 z-10 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow"
+                        className="absolute top-1/2 right-0 z-10 -translate-y-1/2 cursor-pointer rounded-full bg-white/90 p-2 shadow"
                     >
                         <MdArrowForwardIos />
                     </button>
