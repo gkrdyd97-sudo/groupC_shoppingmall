@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import { connection } from 'next/server';
 import { getCart } from '@/domains/cart/queries/getCart.query';
 import CheckoutForm from '@/domains/orders/components/CheckoutForm';
 
@@ -12,20 +14,31 @@ function parseCartIds(value: string | string[] | undefined): number[] {
         .filter((id) => Number.isInteger(id) && id > 0);
 }
 
-export default async function CheckoutPage({
+export default function CheckoutPage({
     searchParams,
 }: {
     searchParams: SearchParams;
 }) {
-    const cartIds = parseCartIds((await searchParams).items);
-    const items = cartIds.length > 0 ? await getCart(cartIds) : [];
 
     return (
         <div className="mx-auto mb-20 max-w-7xl px-4 pb-4">
             <h1 className="my-4 border-b-1 pb-4 text-2xl md:text-4xl">
                 주문/결제
             </h1>
-            <CheckoutForm items={items} />
+            <Suspense fallback={<div>로딩중 . . .</div>}>
+                <CheckoutContent searchParams={searchParams} />
+            </Suspense>
+
         </div>
     );
+}
+async function CheckoutContent({
+    searchParams,
+}: {
+    searchParams: SearchParams;
+}) {
+    await connection();
+    const cartIds = parseCartIds((await searchParams).items);
+    const items = cartIds.length > 0 ? await getCart(cartIds) : [];
+    return <CheckoutForm items={items} />;
 }

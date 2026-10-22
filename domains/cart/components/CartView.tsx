@@ -1,7 +1,7 @@
 'use client';
 
 import { MdCheckBoxOutlineBlank, MdCheckBox } from 'react-icons/md';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import CartItem from './CartItem';
 import CartSummary from './CartSummary';
@@ -19,6 +19,13 @@ export default function CartView({ initialItems }: CartViewProps) {
     const [items, setItems] = useState<Cart[]>(() =>
         initialItems.map((item) => ({ ...item, check: true })),
     );
+
+    const [prevIntialItems, setPrevInitalItems] = useState(initialItems);
+
+    if (initialItems !== prevIntialItems) {
+        setPrevInitalItems(initialItems);
+        setItems(initialItems.map((item) => ({...item, check: true})));
+    }
 
     const checkedItems = items.filter((item) => item.check);
     const totalPrice = getProductTotal(checkedItems);

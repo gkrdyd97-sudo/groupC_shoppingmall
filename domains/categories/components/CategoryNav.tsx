@@ -4,10 +4,10 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
-import { MOCK_CATEGORIES } from '@/shared/mocks/mockData';
 import Link from 'next/link';
 import { FiChevronDown, FiSearch } from 'react-icons/fi';
 import { Input } from '@/shared/components/ui/input';
+import { getCategoryTree } from '../queries/getCategoryTree.query';
 import { type Category } from '@/domains/categories/types/category.types';
 
 function getLeafCategories(categories: Category[]): Category[] {
@@ -18,9 +18,10 @@ function getLeafCategories(categories: Category[]): Category[] {
     );
 }
 
-const NAV_CATEGORIES = MOCK_CATEGORIES.filter((cat) => cat.id !== 'cat-best');
 
-export default function CategoryNav() {
+export default async function CategoryNav() {
+    const categories = await getCategoryTree();
+    const NAV_CATEGORIES = categories;
     return (
         <div className="w-full border-b border-gray-800 bg-mist-900">
             <div className="mx-auto flex max-w-7xl items-center px-4 md:px-6">
@@ -35,7 +36,7 @@ export default function CategoryNav() {
                     {NAV_CATEGORIES.map((cat) => (
                         <Link
                             key={cat.id}
-                            href={`/products?category=${cat.id}`}
+                            href={`/products?category=${cat.name}`}
                             className="shrink-0 rounded-full bg-gray-800 px-3 py-1 text-xs font-medium text-gray-200 transition-colors hover:bg-gray-700"
                         >
                             {cat.name}
@@ -70,7 +71,7 @@ export default function CategoryNav() {
                                     >
                                         <DropdownMenuItem>
                                             <Link
-                                                href={`/products?category=${cat.id}`}
+                                                href={`/products?category=${cat.name}`}
                                                 className="w-full cursor-pointer text-xs font-bold text-blue-600"
                                             >
                                                 {cat.name} 전체보기
@@ -80,11 +81,7 @@ export default function CategoryNav() {
                                             (sub) => (
                                                 <DropdownMenuItem key={sub.id}>
                                                     <Link
-                                                        href={
-                                                            sub.productId
-                                                                ? `/products/${sub.productId}`
-                                                                : `/products?category=${sub.id}`
-                                                        }
+                                                        href={`/products?category=${sub.name}`}
                                                         className="w-full cursor-pointer text-xs text-gray-700"
                                                     >
                                                         {sub.name}
@@ -96,7 +93,7 @@ export default function CategoryNav() {
                                 </DropdownMenu>
                             ) : (
                                 <Link
-                                    href={`/products?category=${cat.id}`}
+                                    href={`/products?category=${cat.name}`}
                                     className="text-sm font-medium text-gray-300 transition-colors hover:text-blue-400"
                                 >
                                     {cat.name}

@@ -34,6 +34,7 @@ export async function getCart(ids?: number[]): Promise<Cart[]> {
     if (ids) query = query.in('id', ids);
 
     const { data, error } = await query;
+    console.log('CART raw data:', JSON.stringify(data, null, 2));
     if (error) {
         console.error('장바구니 조회 실패:', error.message);
         return [];
