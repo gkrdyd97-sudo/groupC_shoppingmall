@@ -1,23 +1,61 @@
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
+    DropdownMenuLinkItem,
     DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { FiChevronDown, FiSearch } from 'react-icons/fi';
 import { Input } from '@/shared/components/ui/input';
 import { getCategoryTree } from '../queries/getCategoryTree.query';
+import { getProducts } from '@/domains/products/queries/getProducts.query';
 import { type Category } from '@/domains/categories/types/category.types';
 
-function getLeafCategories(categories: Category[]): Category[] {
-    return categories.flatMap((cat) =>
-        cat.children && cat.children.length > 0
-            ? getLeafCategories(cat.children)
-            : [cat],
+async function CategoryDropdown({ cat }: { cat: Category }) {
+    const products = await getProducts(cat.name);
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger
+                openOnHover
+                delay={0}
+                closeDelay={150}
+                className="flex items-center gap-1 text-sm font-medium text-gray-300 transition-colors outline-none hover:text-blue-400"
+            >
+                <span>{cat.name}</span>
+                <FiChevronDown className="h-3.5 w-3.5 text-gray-400" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+                align="start"
+                className="w-44 bg-white p-1 shadow-lg"
+            >
+                <DropdownMenuLinkItem
+                    render={
+                        <Link
+                            href={`/products?category=${cat.name}`}
+                            className="w-full cursor-pointer text-xs font-bold text-blue-600"
+                        />
+                    }
+                >
+                    {cat.name} 전체보기
+                </DropdownMenuLinkItem>
+                {products.slice(0, 5).map((product) => (
+                    <DropdownMenuLinkItem
+                        key={product.id}
+                        render={
+                            <Link
+                                href={`/products/${product.id}`}
+                                className="w-full cursor-pointer text-xs text-gray-700"
+                            />
+                        }
+                    >
+                        {product.name}
+                    </DropdownMenuLinkItem>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }
-
 
 export default async function CategoryNav() {
     const categories = await getCategoryTree();
@@ -55,42 +93,7 @@ export default async function CategoryNav() {
                     {NAV_CATEGORIES.map((cat) => (
                         <div key={cat.id} className="relative">
                             {cat.children && cat.children.length > 0 ? (
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger
-                                        openOnHover
-                                        delay={0}
-                                        closeDelay={150}
-                                        className="flex items-center gap-1 text-sm font-medium text-gray-300 transition-colors outline-none hover:text-blue-400"
-                                    >
-                                        <span>{cat.name}</span>
-                                        <FiChevronDown className="h-3.5 w-3.5 text-gray-400" />
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="start"
-                                        className="w-44 bg-white p-1 shadow-lg"
-                                    >
-                                        <DropdownMenuItem>
-                                            <Link
-                                                href={`/products?category=${cat.name}`}
-                                                className="w-full cursor-pointer text-xs font-bold text-blue-600"
-                                            >
-                                                {cat.name} 전체보기
-                                            </Link>
-                                        </DropdownMenuItem>
-                                        {getLeafCategories(cat.children).map(
-                                            (sub) => (
-                                                <DropdownMenuItem key={sub.id}>
-                                                    <Link
-                                                        href={`/products?category=${sub.name}`}
-                                                        className="w-full cursor-pointer text-xs text-gray-700"
-                                                    >
-                                                        {sub.name}
-                                                    </Link>
-                                                </DropdownMenuItem>
-                                            ),
-                                        )}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <CategoryDropdown cat={cat} />
                             ) : (
                                 <Link
                                     href={`/products?category=${cat.name}`}
