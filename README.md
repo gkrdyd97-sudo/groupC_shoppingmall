@@ -10,7 +10,17 @@
 
 ## 스크린샷
 
-> 추후 업데이트 예정 (홈 화면, 상품 상세, 장바구니, 결제 화면 캡처 추가)
+| 홈 화면 | 상품 목록 |
+| --- | --- |
+| ![홈 화면](public/screenshots/home.png) | ![상품 목록](public/screenshots/product-list.png) |
+
+| 상품 상세 | 주문/결제 |
+| --- | --- |
+| ![상품 상세](public/screenshots/product-detail.png) | ![주문/결제](public/screenshots/checkout.png) |
+
+| 마이페이지 | 회원가입 |
+| --- | --- |
+| ![마이페이지](public/screenshots/mypage.png) | ![회원가입](public/screenshots/register.png) |
 
 ## 프로젝트 소개
 
@@ -59,10 +69,10 @@
 
 | 이름 | 역할 | 담당 Task |
 | --- | --- | --- |
-| 정학용 (리더) | Git 관리, 인증·회원 관리, user | 로그인/회원가입 페이지, 마이페이지(주문내역, 정보 수정) |
-| 김민지 | main | 메인페이지 / Header, Footer, Nav 공통 컴포넌트 |
-| 김태양 | pay, cart | 주문서/결제 페이지, 장바구니 페이지(수량 변경, 삭제, 합계 계산) |
-| 서종찬 | product | 상품 목록 페이지 / 상품 상세 페이지 |
+| 정학용 (리더) | Git 관리, 인증·회원 관리, user, admin | 로그인/회원가입 페이지, 마이페이지(주문내역, 정보 수정), 관리자 페이지(대시보드, 권한 가드, 공지사항·고객 Q&A 게시판 관리) |
+| 김민지 | main, category | 메인페이지 / Header, Footer, 카테고리 Nav(드롭다운) 공통 컴포넌트, Next.js 16 Cache Components 빌드 이슈 대응 |
+| 김태양 | pay, cart | 주문서/결제 페이지, 장바구니 페이지(수량 변경, 삭제, 합계 계산), 토스페이먼츠(Toss Payments) API 연동 및 결제 승인 처리 |
+| 서종찬 | product | 상품 목록 / 상세 페이지, 상품 데이터 Supabase 연동<br>관리자 상품 관리 및 유효성 검증 테스트 |
 
 ## 트러블슈팅 & 회고
 

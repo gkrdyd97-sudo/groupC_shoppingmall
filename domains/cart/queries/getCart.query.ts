@@ -8,6 +8,7 @@ interface CartRow {
     option_id: string | null;
     quantity: number;
     PRODUCTS: {
+        gid: string;
         name: string;
         brand: string;
         sale_price: number;
@@ -27,7 +28,7 @@ export async function getCart(ids?: number[]): Promise<Cart[]> {
     let query = supabase
         .from('CART')
         .select(
-            'id, product_id, option_id, quantity, PRODUCTS(name, brand, sale_price, deleted_at), PRODUCT_OPTIONS(item_name, add_price)',
+            'id, product_id, option_id, quantity, PRODUCTS(gid, name, brand, sale_price, deleted_at), PRODUCT_OPTIONS(item_name, add_price)',
         )
         .eq('user_id', user.id)
         .order('created_at', { ascending: true });
@@ -40,17 +41,33 @@ export async function getCart(ids?: number[]): Promise<Cart[]> {
         return [];
     }
 
-    return (data as unknown as CartRow[])
-        .filter((row) => row.PRODUCTS && !row.PRODUCTS.deleted_at)
-        .map((row) => ({
-            id: row.id,
-            productId: row.product_id,
-            productName: row.PRODUCTS!.name,
-            brand: row.PRODUCTS!.brand,
-            optionId: row.option_id ?? undefined,
-            optionName: row.PRODUCT_OPTIONS?.item_name,
-            optionPrice: row.PRODUCT_OPTIONS?.add_price ?? 0,
-            price: row.PRODUCTS!.sale_price,
-            quantity: row.quantity,
-        }));
+    const rows = (data as unknown as CartRow[]).filter(
+        (row) => row.PRODUCTS && !row.PRODUCTS.deleted_at,
+    );
+
+    // 대표 이미지 한꺼번에 가져오기 (getProducts.query.ts와 같은 방식)
+    const gids = rows.map((row) => row.PRODUCTS!.gid);
+    const { data: files } = await supabase
+        .from('FILE_INFO')
+        .select('gid, filename, extension')
+        .in('gid', gids)
+        .eq('location', 'main');
+
+    const imageByGid: Record<string, string> = {};
+    (files ?? []).forEach((f) => {
+        imageByGid[f.gid] = `/images/products/${f.filename}.${f.extension}`;
+    });
+
+    return rows.map((row) => ({
+        id: row.id,
+        productId: row.product_id,
+        productName: row.PRODUCTS!.name,
+        brand: row.PRODUCTS!.brand,
+        imageUrl: imageByGid[row.PRODUCTS!.gid],
+        optionId: row.option_id ?? undefined,
+        optionName: row.PRODUCT_OPTIONS?.item_name,
+        optionPrice: row.PRODUCT_OPTIONS?.add_price ?? 0,
+        price: row.PRODUCTS!.sale_price,
+        quantity: row.quantity,
+    }));
 }
