@@ -1,6 +1,8 @@
 // 결제 승인 페이지
 // 토스 결제창 인증 성공 → successUrl?paymentKey&orderId&amount 로 리다이렉트
 // → DB 주문 금액 검증 후 서버에서 결제 승인 API 호출 → 주문 확인 페이지로 이동
+import { Suspense } from 'react';
+import { connection } from 'next/server';
 import { redirect } from 'next/navigation';
 import {
     getMyOrder,
@@ -18,11 +20,24 @@ function failUrl(code: string, message: string, orderId?: string): string {
     return `/checkout/fail?${params.toString()}`;
 }
 
-export default async function CheckoutSuccessPage({
+export default function CheckoutSuccessPage({
     searchParams,
 }: {
     searchParams: SearchParams;
 }) {
+    return (
+        <Suspense fallback={<div>결제 확인 중...</div>}>
+            <CheckoutSuccessContent searchParams={searchParams} />
+        </Suspense>
+    );
+}
+
+async function CheckoutSuccessContent({
+    searchParams,
+}: {
+    searchParams: SearchParams;
+}) {
+    await connection();
     const { paymentKey, orderId, amount: amountParam } = await searchParams;
     const amount = Number(amountParam);
 
@@ -31,13 +46,13 @@ export default async function CheckoutSuccessPage({
         typeof orderId !== 'string' ||
         !Number.isInteger(amount)
     ) {
-        redirect(failUrl('INVALID_REQUEST', '잘못된 결제 요청입니다.'));
+        return redirect(failUrl('INVALID_REQUEST', '잘못된 결제 요청입니다.'));
     }
 
     // 결제 요청 전에 저장한 주문과 비교해 금액 위변조 검증
     const order = await getMyOrder(orderId);
     if (!order || order.total_price !== amount) {
-        redirect(
+        return redirect(
             failUrl(
                 'INVALID_ORDER',
                 '주문 정보가 일치하지 않습니다. 다시 시도해주세요.',
@@ -66,12 +81,12 @@ export default async function CheckoutSuccessPage({
     }
 
     if (!result.success) {
-        redirect(failUrl(result.error.code, result.error.message, orderId));
+        return redirect(failUrl(result.error.code, result.error.message, orderId));
     }
 
     // 결제는 승인됐으므로 상태 변경에 실패해도 주문 확인 페이지로 보냄 (로그로 추적)
     await updateOrderStatus(orderId, 'PAID');
     await removeOrderedCartItems(order);
 
-    redirect(`/orders/${orderId}?completed=true`);
+    return redirect(`/orders/${orderId}?completed=true`);
 }
