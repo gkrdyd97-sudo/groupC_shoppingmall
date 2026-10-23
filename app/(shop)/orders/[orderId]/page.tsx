@@ -1,5 +1,7 @@
 // 주문 확인 페이지 - 배송 현황, 주문 상품, 결제 금액, 배송지, 결제 정보(영수증)
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
 import { CircleCheck } from 'lucide-react';
 import DeliveryStatus from '@/domains/orders/components/DeliveryStatus';
@@ -27,14 +29,33 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
         </div>
     );
 }
-
-export default async function OrderDetailPage({
+export default function OrderDetailPage({
     params,
     searchParams,
 }: {
     params: Params;
     searchParams: SearchParams;
 }) {
+    return (
+        <div className="mx-auto mb-20 max-w-3xl px-4 pb-4">
+            <Suspense fallback={<div>로딩중...</div>}>
+                <OrderDetailContent
+                    params={params}
+                    searchParams={searchParams}
+                />
+            </Suspense>
+        </div>
+    );
+}
+
+async function OrderDetailContent({
+    params,
+    searchParams,
+}: {
+    params: Params;
+    searchParams: SearchParams;
+}) {
+    await connection();
     const { orderId } = await params;
     const { completed } = await searchParams;
 
@@ -56,7 +77,7 @@ export default async function OrderDetailPage({
     const shippingFee = order.total_price - productPrice;
 
     return (
-        <div className="mx-auto mb-20 max-w-3xl px-4 pb-4">
+        <>
             {completed === 'true' ? (
                 <div className="my-10 flex flex-col items-center gap-3 text-center">
                     <CircleCheck className="size-16 text-blue-500" />
@@ -99,8 +120,8 @@ export default async function OrderDetailPage({
                             <div className="text-sm text-gray-500">
                                 {item.PRODUCT_OPTIONS &&
                                     `옵션: ${item.PRODUCT_OPTIONS.item_name} · `}
-                                {formatPrice(unitPrice(item))} ·{' '}
-                                {item.quantity}개
+                                {formatPrice(unitPrice(item))} · {item.quantity}
+                                개
                             </div>
                         </div>
                         <div className="shrink-0 font-bold">
@@ -163,6 +184,6 @@ export default async function OrderDetailPage({
             >
                 쇼핑 계속하기
             </Link>
-        </div>
+        </>
     );
 }

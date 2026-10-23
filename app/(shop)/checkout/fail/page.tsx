@@ -2,11 +2,24 @@
 // 토스 결제창 실패/취소 → failUrl?code&message&orderId 로 리다이렉트
 // 승인 페이지에서 검증·승인에 실패한 경우도 이 페이지로 보냄
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { CircleAlert } from 'lucide-react';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-export default async function CheckoutFailPage({
+export default function CheckoutFailPage({
+    searchParams,
+}: {
+    searchParams: SearchParams;
+}) {
+    return (
+        <Suspense fallback={<div>로딩중...</div>}>
+            <CheckoutFailContent searchParams={searchParams} />
+        </Suspense>
+    );
+}
+
+async function CheckoutFailContent({
     searchParams,
 }: {
     searchParams: SearchParams;
@@ -33,18 +46,14 @@ export default async function CheckoutFailPage({
                 <dl className="flex flex-col gap-3 rounded-lg border p-4 text-sm md:p-5">
                     {typeof code === 'string' && (
                         <div className="flex justify-between gap-4">
-                            <dt className="shrink-0 text-gray-500">
-                                에러코드
-                            </dt>
+                            <dt className="shrink-0 text-gray-500">에러코드</dt>
                             <dd className="break-all">{code}</dd>
                         </div>
                     )}
                     {typeof orderId === 'string' && (
                         <div className="flex justify-between gap-4">
-                            <dt className="shrink-0 text-gray-500">
-                                주문번호
-                            </dt>
-                            <dd className="break-all text-right">{orderId}</dd>
+                            <dt className="shrink-0 text-gray-500">주문번호</dt>
+                            <dd className="text-right break-all">{orderId}</dd>
                         </div>
                     )}
                 </dl>

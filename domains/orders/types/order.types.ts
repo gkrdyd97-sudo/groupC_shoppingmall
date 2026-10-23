@@ -14,12 +14,7 @@ export interface ShippingInput {
 }
 
 export type OrderStatus =
-    | 'PENDING'
-    | 'PAID'
-    | 'PREPARING'
-    | 'SHIPPING'
-    | 'DELIVERED'
-    | 'CANCELED';
+    'PENDING' | 'PAID' | 'PREPARING' | 'SHIPPING' | 'DELIVERED' | 'CANCELED';
 
 // ORDERS 테이블
 export interface Order {
