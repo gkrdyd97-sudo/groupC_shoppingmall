@@ -12,8 +12,8 @@ const notoSansKr = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-    title: 'Team Sparta Shopping Mall',
-    description: 'AX1 프론트앤드 프로젝트',
+    title: 'RNOD',
+    description: '러너를 위한 기어샵',
 };
 
 export default function RootLayout({
